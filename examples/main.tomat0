@@ -1,0 +1,8 @@
+tomat0 language to compile
+we want to be able to compile things like
+example goal:
+
+int x = 3;
+int y = 4;
+sout(x+y);
+
