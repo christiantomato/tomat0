@@ -1,8 +1,7 @@
-tomat0 language to compile
-we want to be able to compile things like
-example goal:
+-this is our current compilation goal (this is a one line comment)
+-we want to be able to compile the following:
 
-int x = 3;
-int y = 4;
-sout(x+y);
+int var1 = 21;
+int var2 = 48;
+sout(var1 + var2);
 
