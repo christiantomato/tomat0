@@ -10,7 +10,7 @@ token* init_token(int type, char* value) {
     //make sure memory allocation went well
     if(my_token != NULL) {
         //set the values to what we passed in
-        my_token->token_type = type;
+        my_token->type = type;
         my_token->value = value;
         //return created token
         return my_token;
