@@ -55,52 +55,26 @@ token* tokenize_next(lexer* lexer) {
             //tokenize the entire number
             return tokenize_number(lexer);
         }
-
         //for variables, keywords
         if(isalnum(lexer->c)) {
             //tokenize the variable/keyword
             return tokenize_ID(lexer);
         }
         
-
         //use a switch paired with the token type enum
         switch(lexer->c) {
-            //equals sign
-            case '=': 
-                {
-                    //create the token to return whilst advancing lexer
-                    token* equals_token = init_token(0, lexer_char_as_string(lexer));
-                    return continue_with_token(lexer, equals_token);
-                }
-                break;
-            //semicolon
-            case ';':
-                {
-                    token* semicolon_token = init_token(1, lexer_char_as_string(lexer));
-                    return continue_with_token(lexer, semicolon_token);
-                }
-                break;
-            //left parentheses
-            case '(':
-            {
-                token* lparen_token = init_token(2, lexer_char_as_string(lexer));
-                return continue_with_token(lexer, lparen_token);
-            }
-                break;
-            //right parentheses
-            case ')':
-            {
-                token* rparen_token = init_token(3, lexer_char_as_string(lexer));
-                return continue_with_token(lexer, rparen_token);
-            }
-                break;
-            //quotation (indicating we have to tokenize a string)
             case '"':
                 //since we have a quotation, we need to tokenize the string following it
-                return tokenize_string(lexer);
-                break;
-            default:
-                return NULL;
+                return tokenize_string(lexer); break;
+            //all other easy punctuations
+            case '=': return continue_with_token(lexer, init_token(TOKEN_EQUALS, lexer_char_as_string(lexer))); break;
+            case ';': return continue_with_token(lexer, init_token(TOKEN_SEMI, lexer_char_as_string(lexer))); break;
+            case '(': return continue_with_token(lexer, init_token(TOKEN_LPAREN, lexer_char_as_string(lexer))); break;
+            case ')': return continue_with_token(lexer, init_token(TOKEN_RPAREN, lexer_char_as_string(lexer))); break;
+            case '+': return continue_with_token(lexer, init_token(TOKEN_ADD, lexer_char_as_string(lexer))); break;
+            case '-': return continue_with_token(lexer, init_token(TOKEN_HYPHEN, lexer_char_as_string(lexer))); break;
+            case ':': return continue_with_token(lexer, init_token(TOKEN_COLON, lexer_char_as_string(lexer))); break;
+            default: return NULL;
         }
     }
     return NULL;
@@ -130,7 +104,7 @@ token* tokenize_string(lexer* lexer) {
     //ignore closing quote
     advance(lexer);
     //once finisished, return string as token
-    return init_token(4, strValue);
+    return init_token(TOKEN_STRING, strValue);
 }
 
 //method to tokenize IDs (variables and keywords)
@@ -153,7 +127,7 @@ token* tokenize_ID(lexer* lexer) {
         advance(lexer);
     }
     //once finisished, return string as token
-    return init_token(5, strValue);
+    return init_token(TOKEN_ID, strValue);
 }
 
 //method to tokenize numbers
@@ -176,7 +150,7 @@ token* tokenize_number(lexer* lexer) {
         advance(lexer);
     }
     //once finisished, return string as token
-    return init_token(6, strValue);
+    return init_token(TOKEN_NUM, strValue);
 }
 
 //just advance the lexer, and return the token we just tokenized
