@@ -1,4 +1,4 @@
-//define our toxens that the lexer will use
+//define our tokens that our lexer will use
 /*
 - numbers
 - symbols 
@@ -12,22 +12,21 @@
 
 //tokens will be of the form (type, value)
 typedef struct token {
-    //enum for the types of tokens
+    //enum for the types of tokens we will be classifying
     enum type {
         //enums start at index 0.
+        TOKEN_EQUALS,
+        TOKEN_SEMI,
+        TOKEN_LPAREN,
+        TOKEN_RPAREN,
+        TOKEN_STRING,
         TOKEN_ID,
         TOKEN_NUM,
         TOKEN_SYM,
-        TOKEN_STR,
         TOKEN_OPR,
-        TOKEN_EQUALS,
-        TOKEN_PLUS,
-        //punctuation special tokens
-        TOKEN_SEMI,
-        TOKEN_LPAREN,
-        TOKEN_RPAREN
+        TOKEN_PLUS
     } token_type;
-    //value
+    //value token holds
     char* value;
 } token; 
 

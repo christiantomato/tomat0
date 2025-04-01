@@ -4,8 +4,8 @@ exec = tomat0.out
 sources = $(wildcard src/*.c)
 #object files created by compiler, linked together to create exectuable
 objects = $(sources: .c = .o)
-#for debugging
-flags = -g
+#for debugging, commented out for now because the dysm file is making me go insane and we don't need it right now
+#flags = -g
 
 
 #how to create the exectuable
