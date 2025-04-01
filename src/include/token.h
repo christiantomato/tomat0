@@ -13,7 +13,7 @@
 //tokens will be of the form (type, value)
 typedef struct token {
     //enum for the types of tokens we will be classifying
-    enum type {
+    enum token_type {
         //enums start at index 0.
         TOKEN_EQUALS,
         TOKEN_SEMI,
@@ -21,11 +21,8 @@ typedef struct token {
         TOKEN_RPAREN,
         TOKEN_STRING,
         TOKEN_ID,
-        TOKEN_NUM,
-        TOKEN_SYM,
-        TOKEN_OPR,
-        TOKEN_PLUS
-    } token_type;
+        TOKEN_NUM
+    } type;
     //value token holds
     char* value;
 } token; 
