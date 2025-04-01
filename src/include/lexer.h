@@ -1,9 +1,8 @@
-//this file contains our definition for the lexer structure
+//file containing definition and declarations of the lexer structure
+
+#include "token.h"
 #ifndef LEXER_H
 #define LEXER_H
-//include our token definition
-#include "token.h"
-//declarations for the lexer
 
 //struct to store current state of lexer
 typedef struct lexer {
@@ -24,12 +23,12 @@ void advance(lexer* lexer);
 //to skip whitespace
 void skip_whitespace(lexer* lexer);
 //to get the next token
-token* get_next_token(lexer* lexer);
+token* tokenize_next(lexer* lexer);
 //function for how we will tokenize strings
 token* tokenize_string(lexer* lexer); 
-//continuing on a token (like a string or long number)
+//continuing on a token (just advancing the lexer and returning our token to prepare for next tokenization)
 token* continue_with_token(lexer* lexer, token* token);
-//function to get the current char as a char[]
-char* get_current_char_as_string(lexer* lexer);
+//function to get the current lexer char as a string
+char* lexer_char_as_string(lexer* lexer);
 
 #endif
