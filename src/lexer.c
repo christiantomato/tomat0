@@ -43,12 +43,26 @@ void skip_whitespace(lexer* lexer) {
     }
 }
 
-//critical function that will classify tokens
+//critical method that will classify tokens
 token* tokenize_next(lexer* lexer) {
     //while we are not on null character and are still within contents
     while(lexer->c != '\0' && lexer->i < strlen(lexer->contents)) {
         //first skip any whitespace
         skip_whitespace(lexer);
+
+        //check for number first (variables cannot start with numbers in tomat0)
+        if(isnumber(lexer->c)) {
+            //tokenize the entire number
+            return tokenize_number(lexer);
+        }
+
+        //for variables, keywords
+        if(isalnum(lexer->c)) {
+            //tokenize the variable/keyword
+            return tokenize_ID(lexer);
+        }
+        
+
         //use a switch paired with the token type enum
         switch(lexer->c) {
             //equals sign
@@ -59,7 +73,6 @@ token* tokenize_next(lexer* lexer) {
                     return continue_with_token(lexer, equals_token);
                 }
                 break;
-
             //semicolon
             case ';':
                 {
@@ -93,7 +106,7 @@ token* tokenize_next(lexer* lexer) {
     return NULL;
 }
 
-//function for how we will tokenize strings
+//method for how we will tokenize strings
 token* tokenize_string(lexer* lexer) {
     //skip the initial quotation
     advance(lexer);
@@ -120,6 +133,52 @@ token* tokenize_string(lexer* lexer) {
     return init_token(4, strValue);
 }
 
+//method to tokenize IDs (variables and keywords)
+token* tokenize_ID(lexer* lexer) {
+    //allocate memory for the string we will be returning
+    char* strValue = malloc(sizeof(char));
+    //make sure no garbage values, set null character
+    strValue[0] = '\0';
+    //build the string as long as our ID is alpha numeric
+    while(isalnum(lexer->c)) {
+        //create a temp char that will store the current char as a string, so we can concat it later
+        char* temp = lexer_char_as_string(lexer);
+        //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
+        strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
+        //concatenate it
+        strcat(strValue, temp);
+        //free temp as its no longer needed
+        free(temp);
+        //advance to next character
+        advance(lexer);
+    }
+    //once finisished, return string as token
+    return init_token(5, strValue);
+}
+
+//method to tokenize numbers
+token* tokenize_number(lexer* lexer) {
+    //allocate memory for the string we will be returning
+    char* strValue = malloc(sizeof(char));
+    //make sure no garbage values, set null character
+    strValue[0] = '\0';
+    //build the string as long as we are still on a number
+    while(isnumber(lexer->c)) {
+        //create a temp char that will store the current char as a string, so we can concat it later
+        char* temp = lexer_char_as_string(lexer);
+        //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
+        strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
+        //concatenate it
+        strcat(strValue, temp);
+        //free temp as its no longer needed
+        free(temp);
+        //advance to next character
+        advance(lexer);
+    }
+    //once finisished, return string as token
+    return init_token(6, strValue);
+}
+
 //just advance the lexer, and return the token we just tokenized
 token* continue_with_token(lexer* lexer, token* token) {
     //advance with the token
@@ -127,7 +186,7 @@ token* continue_with_token(lexer* lexer, token* token) {
     return token;
 }
 
-//function to get the current char as a char[]
+//method to get the current char as a char[]
 char* lexer_char_as_string(lexer* lexer) {
     //lexer->c is char, we need to make it a proper null terminated string
     char* char_as_str = malloc(2*sizeof(char));
