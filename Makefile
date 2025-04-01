@@ -7,7 +7,6 @@ objects = $(sources: .c = .o)
 #for debugging, commented out for now because the dysm file is making me go insane and we don't need it right now
 #flags = -g
 
-
 #how to create the exectuable
 $(exec): $(objects)
 	gcc $(objects) $(flags) -o $(exec)
@@ -23,7 +22,7 @@ install:
 	make
 	cp ./tomat0.out /usr/local/bin/tomat0
 
-#clean command to recompile (remove .out ext and object files)
+#clean command to recompile (remove .out ext and object files and dysm because again it makes me go insane)
 clean:
 	-rm *.out
 	-rm *.o 
