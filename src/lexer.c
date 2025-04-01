@@ -1,4 +1,4 @@
-//now we will implement the actual lexer with the specified functions
+//implement the lexer with the specified functions
 #include "include/lexer.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,12 +11,10 @@ lexer* init_lexer(char* contents) {
     lexer* my_lexer = malloc(sizeof(lexer));
     //make sure memory allocation went smoothly
     if(my_lexer != NULL) {
-        //initialize values
+        //initialize values 
+        my_lexer->c = contents[my_lexer->i];
         my_lexer->i = 0;
         my_lexer->contents = contents;
-        //start the character at first index of contents
-        my_lexer->c = contents[my_lexer->i];
-        //finally return
         return my_lexer;
     }
     else {
@@ -37,29 +35,27 @@ void advance(lexer* lexer) {
     }
 }
 
-//to skip whitespace
+//lexer skip over whitespace 
 void skip_whitespace(lexer* lexer) {
-    //if we are on white space, move
+    //advance until no longer on whitespace
     while(isspace(lexer->c)) {
         advance(lexer);
     }
 }
 
-//critical function that will classify tokens. 
-token* get_next_token(lexer* lexer) {
+//critical function that will classify tokens
+token* tokenize_next(lexer* lexer) {
+    //while we are not on null character and are still within contents
     while(lexer->c != '\0' && lexer->i < strlen(lexer->contents)) {
-        //figure out what kind of token it is
-
         //first skip any whitespace
         skip_whitespace(lexer);
-        
-        //lets use a switch for the enum
+        //use a switch paired with the token type enum
         switch(lexer->c) {
             //equals sign
             case '=': 
                 {
                     //create the token to return whilst advancing lexer
-                    token* equals_token = init_token(0, get_current_char_as_string(lexer));
+                    token* equals_token = init_token(0, lexer_char_as_string(lexer));
                     return continue_with_token(lexer, equals_token);
                 }
                 break;
@@ -67,25 +63,25 @@ token* get_next_token(lexer* lexer) {
             //semicolon
             case ';':
                 {
-                    token* semicolon_token = init_token(1, get_current_char_as_string(lexer));
+                    token* semicolon_token = init_token(1, lexer_char_as_string(lexer));
                     return continue_with_token(lexer, semicolon_token);
                 }
                 break;
-            //left paren
+            //left parentheses
             case '(':
             {
-                token* lparen_token = init_token(2, get_current_char_as_string(lexer));
+                token* lparen_token = init_token(2, lexer_char_as_string(lexer));
                 return continue_with_token(lexer, lparen_token);
             }
                 break;
-            //right paren
+            //right parentheses
             case ')':
             {
-                token* rparen_token = init_token(3, get_current_char_as_string(lexer));
+                token* rparen_token = init_token(3, lexer_char_as_string(lexer));
                 return continue_with_token(lexer, rparen_token);
             }
                 break;
-            //quotation (string)
+            //quotation (indicating we have to tokenize a string)
             case '"':
                 //since we have a quotation, we need to tokenize the string following it
                 return tokenize_string(lexer);
@@ -108,15 +104,13 @@ token* tokenize_string(lexer* lexer) {
     //build the string as long as we have not reached next quotation
     while(lexer->c != '"') {
         //create a temp char that will store the current char as a string, so we can concat it later
-        char* temp = get_current_char_as_string(lexer);
+        char* temp = lexer_char_as_string(lexer);
         //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
         strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
-
         //concatenate it
         strcat(strValue, temp);
         //free temp as its no longer needed
         free(temp);
-
         //advance to next
         advance(lexer);
     }
@@ -126,7 +120,7 @@ token* tokenize_string(lexer* lexer) {
     return init_token(4, strValue);
 }
 
-//continue with a token
+//just advance the lexer, and return the token we just tokenized
 token* continue_with_token(lexer* lexer, token* token) {
     //advance with the token
     advance(lexer);
@@ -134,7 +128,7 @@ token* continue_with_token(lexer* lexer, token* token) {
 }
 
 //function to get the current char as a char[]
-char* get_current_char_as_string(lexer* lexer) {
+char* lexer_char_as_string(lexer* lexer) {
     //lexer->c is char, we need to make it a proper null terminated string
     char* char_as_str = malloc(2*sizeof(char));
     //build the null terminated string
