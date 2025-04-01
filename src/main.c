@@ -6,7 +6,7 @@ int main (int argc, char *argv[]) {
     //lets read from the tomat0 file
     char* file_contents;
     FILE* tomat0_file; 
-    tomat0_file = fopen("/Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tomat0", "r");
+    tomat0_file = fopen("/Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tmt", "r");
     if(tomat0_file == NULL) {
         //error
         printf("error opening file\n");

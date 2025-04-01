@@ -5,7 +5,7 @@
 #define LEXER_H
 
 //struct to store current state of lexer
-typedef struct lexer {
+typedef struct lexer_struct {
     //current char
     char c;
     //index, acting as the cursor through contents

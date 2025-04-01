@@ -27,7 +27,7 @@ typedef enum token_type {
 } type;
 
 //tokens will be of the form (type, value)
-typedef struct token {
+typedef struct token_struct {
     //token type
     int type;
     //value token holds
