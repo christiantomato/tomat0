@@ -39,3 +39,11 @@ char* token_type_str(token* token) {
         default: return "TOKEN_UNIDENTIFIED";
     }
 }
+
+//free memory
+void free_token(token* token) {
+    //free token value
+    free(token->value);
+    //then free token
+    free(token);
+}

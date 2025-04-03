@@ -38,5 +38,7 @@ typedef struct token_struct {
 token* init_token(int type, char* value);
 //method to get the actual enum name which is helpful
 char* token_type_str(token* token);
+//method to free memory from tokens (good practiceee)
+void free_token(token* token);
 
 #endif

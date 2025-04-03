@@ -170,3 +170,11 @@ char* lexer_char_as_string(lexer* lexer) {
     //return the char as a string
     return char_as_str;
 }
+
+//free all the memory that is being used by the lexer
+void free_lexer(lexer* lexer) {
+    //free the contents
+    free(lexer->contents);
+    //free the lexer
+    free(lexer);
+}

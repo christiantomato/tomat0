@@ -32,7 +32,9 @@ token* tokenize_ID(lexer* lexer);
 token* tokenize_number(lexer* lexer);
 //continuing on a token (just advancing the lexer and returning our token to prepare for next tokenization)
 token* continue_with_token(lexer* lexer, token* token);
-//function to get the current lexer char as a string
+//method to get the current lexer char as a string
 char* lexer_char_as_string(lexer* lexer);
+//final method to free memory from the lexer! (this is good practice)
+void free_lexer(lexer* lexer);
 
 #endif

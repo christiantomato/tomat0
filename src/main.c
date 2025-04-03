@@ -33,9 +33,12 @@ int main (int argc, char *argv[]) {
     token* token = (void*)0;
     while((token = tokenize_next(my_lexer)) != NULL) {
         printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
+        //free the token as it is not needed anymore
+        free(token);
     }
 
     fclose(tomat0_file);
     free(file_contents);
+    free(my_lexer);
     return 0;
 }
