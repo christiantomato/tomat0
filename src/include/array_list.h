@@ -17,8 +17,10 @@ typedef struct generic_list {
 
 //initializtion of the list
 list* init_list(size_t data_size, unsigned int init_capacity);
-//add data to the list - use a void pointer, as we don't know the type of the data. 
-void add(list* list, void* data);
+//adds data to the end of the list - use a void pointer, as we don't know the type of the data. 
+void list_add(list* list, void* data);
+//remove data at a specified index, and the list will shift over so there is no gaps
+void list_remove(list* list, unsigned int index);
 //list helper method to expand capacity
 void expand_capacity(list* list);
 //check for empty list

@@ -5,6 +5,6 @@
 #include "lexer.h"
 #include "token.h"
 #include "main.h"
-#include "list.h"
+#include "array_list.h"
 
 #endif

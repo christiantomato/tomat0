@@ -19,7 +19,7 @@ typedef struct lexer_struct {
 //lexer initializor
 lexer* init_lexer(char* contents);
 //move to the next character
-void advance(lexer* lexer);
+void lexer_advance(lexer* lexer);
 //to skip whitespace
 void skip_whitespace(lexer* lexer);
 //to get the next token

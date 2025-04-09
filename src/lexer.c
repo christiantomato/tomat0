@@ -1,6 +1,5 @@
 //implement the lexer with the specified functions
 #include "include/lexer.h"
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -9,23 +8,15 @@
 lexer* init_lexer(char* contents) {
     //allocate memory for the lexer
     lexer* my_lexer = malloc(sizeof(lexer));
-    //make sure memory allocation went smoothly
-    if(my_lexer != NULL) {
-        //initialize values 
-        my_lexer->c = contents[my_lexer->i];
-        my_lexer->i = 0;
-        my_lexer->contents = contents;
-        return my_lexer;
-    }
-    else {
-        //something went wrong
-        printf("error");
-        return NULL;
-    }
+    //initialize values 
+    my_lexer->c = contents[my_lexer->i];
+    my_lexer->i = 0;
+    my_lexer->contents = contents;
+    return my_lexer;
 }
 
 //move to the next character
-void advance(lexer* lexer) {
+void lexer_advance(lexer* lexer) {
     //if we are still in string and not at null character
     if(lexer->c != '\0' && lexer->i < strlen(lexer->contents)) {
         //increment the index
@@ -39,7 +30,7 @@ void advance(lexer* lexer) {
 void skip_whitespace(lexer* lexer) {
     //advance until no longer on whitespace
     while(isspace(lexer->c)) {
-        advance(lexer);
+        lexer_advance(lexer);
     }
 }
 
@@ -83,7 +74,7 @@ token* tokenize_next(lexer* lexer) {
 //method for how we will tokenize strings
 token* tokenize_string(lexer* lexer) {
     //skip the initial quotation
-    advance(lexer);
+    lexer_advance(lexer);
     //allocate memory for the string we will be returning
     char* strValue = malloc(sizeof(char));
     //make sure no garbage values, set null character
@@ -99,10 +90,10 @@ token* tokenize_string(lexer* lexer) {
         //free temp as its no longer needed
         free(temp);
         //advance to next
-        advance(lexer);
+        lexer_advance(lexer);
     }
     //ignore closing quote
-    advance(lexer);
+    lexer_advance(lexer);
     //once finisished, return string as token
     return init_token(TOKEN_STRING, strValue);
 }
@@ -124,7 +115,7 @@ token* tokenize_ID(lexer* lexer) {
         //free temp as its no longer needed
         free(temp);
         //advance to next character
-        advance(lexer);
+        lexer_advance(lexer);
     }
     //once finisished, return string as token
     return init_token(TOKEN_ID, strValue);
@@ -147,7 +138,7 @@ token* tokenize_number(lexer* lexer) {
         //free temp as its no longer needed
         free(temp);
         //advance to next character
-        advance(lexer);
+        lexer_advance(lexer);
     }
     //once finisished, return string as token
     return init_token(TOKEN_NUM, strValue);
@@ -156,7 +147,7 @@ token* tokenize_number(lexer* lexer) {
 //just advance the lexer, and return the token we just tokenized
 token* continue_with_token(lexer* lexer, token* token) {
     //advance with the token
-    advance(lexer);
+    lexer_advance(lexer);
     return token;
 }
 

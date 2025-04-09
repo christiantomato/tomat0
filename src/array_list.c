@@ -1,7 +1,8 @@
 //implement our list
-#include "include/list.h"
+#include "include/array_list.h"
+#include <stdio.h>
 
-//initializes our list
+//list initializor
 list* init_list(size_t data_size, unsigned int init_capacity) {
     //memory allocate for list
     list* list = malloc(sizeof(list));
@@ -18,7 +19,7 @@ list* init_list(size_t data_size, unsigned int init_capacity) {
 }
 
 //adds data to our list 
-void add(list* list, void* data) {
+void list_add(list* list, void* data) {
     //if we are at max capacity, expand
     if(is_max_capacity(list)) {
         expand_capacity(list);
@@ -31,10 +32,31 @@ void add(list* list, void* data) {
     list->num_items++;
 }
 
+//removes data from our list
+void list_remove(list* list, unsigned int index) {
+    //make sure the index is valid
+    if(index >= list->num_items) {
+        //bad
+        printf("cannot remove");
+        return;
+    }
+    //goodbye data
+    list->array[index] = NULL;
+    //shift stuff over
+    for(int i = index + 1; i < list->num_items; i++) {
+        //shift to previous
+        list->array[i-1] = list->array[i];
+    }
+    //update item count
+    list->num_items--;
+}
+
 //helper method to expand list capacity
 void expand_capacity(list* list) {
     //create a new array with greater capacity, lets say double the original
     void** new_array = malloc(list->current_capacity * 2 * sizeof(void*));
+    //update the current capacity
+    list->current_capacity = list->current_capacity * 2;
     //copy the values
     for(int i = 0; i < list->num_items; i++) {
         //allocate the space for the new array location
@@ -63,7 +85,14 @@ int free_list(list* list) {
         return 1;
     }
     //free all contents in the array, then the array, then the list itself. 
-
-
+    for(int i = 0; i < list->num_items; i++) {
+        //free pointer to data in the array
+        free(list->array[i]);
+    }
+    //free pointer to the array
+    free(list->array);
+    //free the list
+    free(list);
+    //success
     return 0;
 }

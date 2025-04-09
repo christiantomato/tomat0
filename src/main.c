@@ -53,19 +53,23 @@ int main (int argc, char *argv[]) {
 
     //generic list
     list* my_list = init_list(sizeof(int), 3);
-    add(my_list, ptra);
-    add(my_list, ptrb);
-    add(my_list, ptrc);
+    list_add(my_list, ptra);
+    list_add(my_list, ptrb);
+    list_add(my_list, ptrc);
 
     //test 
-    printf("%d", *(int*)my_list->array[0]);
-    printf("%d", *(int*)my_list->array[1]);
+    printf("%d\n", *(int*)my_list->array[0]);
+    printf("%d\n", *(int*)my_list->array[1]);
 
     //add another
     int d = 4;
     int* ptrd = &d;
-    add(my_list, ptrd);
-    printf("%d", *(int*)my_list->array[3]);
+    list_add(my_list, ptrd);
+    printf("%d\n", *(int*)my_list->array[3]);
+
+    //remove
+    list_remove(my_list, 1);
+    printf("%d\n", *(int*)my_list->array[2]);
 
     
     return 0;
