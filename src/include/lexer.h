@@ -35,6 +35,6 @@ token* continue_with_token(lexer* lexer, token* token);
 //method to get the current lexer char as a string
 char* lexer_char_as_string(lexer* lexer);
 //final method to free memory from the lexer! (this is good practice)
-void free_lexer(lexer* lexer);
+int free_lexer(lexer* lexer);
 
 #endif

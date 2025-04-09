@@ -172,9 +172,15 @@ char* lexer_char_as_string(lexer* lexer) {
 }
 
 //free all the memory that is being used by the lexer
-void free_lexer(lexer* lexer) {
+int free_lexer(lexer* lexer) {
+    if(lexer == NULL) {
+        //bad return 1
+        return 1;
+    }
     //free the contents
     free(lexer->contents);
     //free the lexer
     free(lexer);
+    //return 0 for success
+    return 0;
 }

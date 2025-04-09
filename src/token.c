@@ -41,9 +41,15 @@ char* token_type_str(token* token) {
 }
 
 //free memory
-void free_token(token* token) {
+int free_token(token* token) {
+    if(token == NULL) {
+        //failure
+        return 1;
+    }
     //free token value
     free(token->value);
     //then free token
     free(token);
+    //success
+    return 0;
 }
