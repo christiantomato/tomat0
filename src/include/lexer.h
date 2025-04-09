@@ -1,6 +1,7 @@
 //file containing definition and declarations of the lexer structure
 
 #include "token.h"
+
 #ifndef LEXER_H
 #define LEXER_H
 

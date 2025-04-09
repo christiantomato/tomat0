@@ -1,0 +1,5 @@
+AST for main.tmt should look like:
+
+NODE: Global:
+    NODE: Variable_Declaration:
+        Variable Type
