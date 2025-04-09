@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 int main (int argc, char *argv[]) {
+    /*
     //lets read from the tomat0 file
     char* file_contents;
     FILE* tomat0_file; 
@@ -40,5 +41,32 @@ int main (int argc, char *argv[]) {
     fclose(tomat0_file);
     free(file_contents);
     free(my_lexer);
+    */
+
+    //testing our list
+    int a = 1;
+    int b = 2;
+    int c = 3;
+    int* ptra = &a;
+    int* ptrb = &b;
+    int* ptrc = &c;
+
+    //generic list
+    list* my_list = init_list(sizeof(int), 3);
+    add(my_list, ptra);
+    add(my_list, ptrb);
+    add(my_list, ptrc);
+
+    //test 
+    printf("%d", *(int*)my_list->array[0]);
+    printf("%d", *(int*)my_list->array[1]);
+
+    //add another
+    int d = 4;
+    int* ptrd = &d;
+    add(my_list, ptrd);
+    printf("%d", *(int*)my_list->array[3]);
+
+    
     return 0;
 }
