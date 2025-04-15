@@ -27,7 +27,6 @@ typedef struct ast_node_struct {
     int type;
     //have a reference to the children (differs depending on the specific type of ast node)
     list* children;
-    
 } ast_node;
 
 #endif
