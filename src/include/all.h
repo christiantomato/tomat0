@@ -6,5 +6,6 @@
 #include "token.h"
 #include "main.h"
 #include "array_list.h"
+#include "file_reader.h"
 
 #endif
