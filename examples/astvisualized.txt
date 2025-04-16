@@ -1,5 +1,7 @@
 AST for main.tmt should look like:
 
-NODE: Global:
+NODE: Program:
     NODE: Variable_Declaration:
-        Variable Type
+    ARGUMENTS: type, identifier, expression
+        NODE: Binary Operation
+        ARGUMENTS: num1, num2, op

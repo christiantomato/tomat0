@@ -1,3 +1,4 @@
+//ast goal
 int myVar = 3 + 6;
 
 
