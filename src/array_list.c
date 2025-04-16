@@ -3,9 +3,9 @@
 #include <stdio.h>
 
 //list initializor
-list* init_list(size_t data_size, unsigned int init_capacity) {
+List* init_list(size_t data_size, unsigned int init_capacity) {
     //memory allocate for list
-    list* list = malloc(sizeof(list));
+    List* list = malloc(sizeof(list));
     //set data size
     list->data_size = data_size;
     //start at 0 items
@@ -19,7 +19,7 @@ list* init_list(size_t data_size, unsigned int init_capacity) {
 }
 
 //adds data to our list 
-void list_add(list* list, void* data) {
+void list_add(List* list, void* data) {
     //if we are at max capacity, expand
     if(is_max_capacity(list)) {
         expand_capacity(list);
@@ -33,7 +33,7 @@ void list_add(list* list, void* data) {
 }
 
 //removes data from our list
-void list_remove(list* list, unsigned int index) {
+void list_remove(List* list, unsigned int index) {
     //make sure the index is valid
     if(index >= list->num_items) {
         //bad
@@ -52,7 +52,7 @@ void list_remove(list* list, unsigned int index) {
 }
 
 //helper method to expand list capacity
-void expand_capacity(list* list) {
+void expand_capacity(List* list) {
     //create a new array with greater capacity, lets say double the original
     void** new_array = malloc(list->current_capacity * 2 * sizeof(void*));
     //update the current capacity
@@ -70,16 +70,16 @@ void expand_capacity(list* list) {
 }
 
 //is list empty
-bool is_empty(list* list) {
+bool is_empty(List* list) {
     return list->num_items == 0;
 }
 
 //is list full
-bool is_max_capacity(list* list) {
+bool is_max_capacity(List* list) {
     return list->num_items == list->current_capacity;
 }
 
-int free_list(list* list) {
+int free_list(List* list) {
     if(list == NULL) {
         //failure
         return 1;

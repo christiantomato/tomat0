@@ -9,8 +9,8 @@ int main (int argc, char *argv[]) {
     
     //tokenize with lexer
     printf("%s", file_contents);
-    lexer* my_lexer = init_lexer(file_contents);
-    token* token = (void*)0;
+    Lexer* my_lexer = init_lexer(file_contents);
+    Token* token = (void*)0;
     while((token = tokenize_next(my_lexer)) != NULL) {
         printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
         //free the token as it is not needed anymore

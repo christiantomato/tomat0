@@ -3,18 +3,18 @@
 #include <stdlib.h>
 
 //token initializor
-token* init_token(int type, char* value) {
+Token* init_token(int type, char* value) {
     //allocate space for the token
-    token* my_token = malloc(sizeof(token));
+    Token* token = malloc(sizeof(Token));
     //set the values to what we passed in
-    my_token->type = type;
-    my_token->value = value;
+    token->type = type;
+    token->value = value;
     //return created token
-    return my_token;  
+    return token;  
 }
 
 //get the token type as a string
-char* token_type_str(token* token) {
+char* token_type_str(Token* token) {
     //switch on the token type
     switch(token->type) {
         case TOKEN_ID: return "TOKEN_ID"; break;
@@ -24,15 +24,17 @@ char* token_type_str(token* token) {
         case TOKEN_SEMI: return "TOKEN_SEMI"; break;
         case TOKEN_LPAREN: return "TOKEN_LPAREN"; break;
         case TOKEN_RPAREN: return "TOKEN_RPAREN"; break;
-        case TOKEN_ADD: return "TOKEN_ADD"; break;
+        case TOKEN_FSLASH: return "TOKEN_FSLASH"; break;
+        case TOKEN_BSLASH: return "TOKEN_BSLASH"; break;
+        case TOKEN_PLUS: return "TOKEN_PLUS"; break;
         case TOKEN_HYPHEN: return "TOKEN_HYPHEN"; break;
         case TOKEN_COLON: return "TOKEN_COLON"; break;
-        default: return "TOKEN_UNIDENTIFIED";
+        default: return NULL;
     }
 }
 
 //free memory
-int free_token(token* token) {
+int free_token(Token* token) {
     if(token == NULL) {
         //failure
         return 1;

@@ -5,18 +5,18 @@
 #include <ctype.h>
 
 //lexer initializor
-lexer* init_lexer(char* contents) {
+Lexer* init_lexer(char* contents) {
     //allocate memory for the lexer
-    lexer* my_lexer = malloc(sizeof(lexer));
+    Lexer* lexer = malloc(sizeof(Lexer));
     //initialize values 
-    my_lexer->c = contents[my_lexer->i];
-    my_lexer->i = 0;
-    my_lexer->contents = contents;
-    return my_lexer;
+    lexer->c = contents[lexer->i];
+    lexer->i = 0;
+    lexer->contents = contents;
+    return lexer;
 }
 
 //move to the next character
-void lexer_advance(lexer* lexer) {
+void lexer_advance(Lexer* lexer) {
     //if we are still in string and not at null character
     if(lexer->c != '\0' && lexer->i < strlen(lexer->contents)) {
         //increment the index
@@ -27,7 +27,7 @@ void lexer_advance(lexer* lexer) {
 }
 
 //lexer skip over whitespace 
-void skip_whitespace(lexer* lexer) {
+void skip_whitespace(Lexer* lexer) {
     //advance until no longer on whitespace
     while(isspace(lexer->c)) {
         lexer_advance(lexer);
@@ -35,7 +35,7 @@ void skip_whitespace(lexer* lexer) {
 }
 
 //critical method that will classify tokens
-token* tokenize_next(lexer* lexer) {
+Token* tokenize_next(Lexer* lexer) {
     //while we are not on null character and are still within contents
     while(lexer->c != '\0' && lexer->i < strlen(lexer->contents)) {
         //first skip any whitespace
@@ -62,7 +62,9 @@ token* tokenize_next(lexer* lexer) {
             case ';': return continue_with_token(lexer, init_token(TOKEN_SEMI, lexer_char_as_string(lexer))); break;
             case '(': return continue_with_token(lexer, init_token(TOKEN_LPAREN, lexer_char_as_string(lexer))); break;
             case ')': return continue_with_token(lexer, init_token(TOKEN_RPAREN, lexer_char_as_string(lexer))); break;
-            case '+': return continue_with_token(lexer, init_token(TOKEN_ADD, lexer_char_as_string(lexer))); break;
+            case '/': return continue_with_token(lexer, init_token(TOKEN_FSLASH, lexer_char_as_string(lexer))); break;
+            case '\\': return continue_with_token(lexer, init_token(TOKEN_BSLASH, lexer_char_as_string(lexer))); break;
+            case '+': return continue_with_token(lexer, init_token(TOKEN_PLUS, lexer_char_as_string(lexer))); break;
             case '-': return continue_with_token(lexer, init_token(TOKEN_HYPHEN, lexer_char_as_string(lexer))); break;
             case ':': return continue_with_token(lexer, init_token(TOKEN_COLON, lexer_char_as_string(lexer))); break;
             default: return NULL;
@@ -72,7 +74,7 @@ token* tokenize_next(lexer* lexer) {
 }
 
 //method for how we will tokenize strings
-token* tokenize_string(lexer* lexer) {
+Token* tokenize_string(Lexer* lexer) {
     //skip the initial quotation
     lexer_advance(lexer);
     //allocate memory for the string we will be returning
@@ -99,7 +101,7 @@ token* tokenize_string(lexer* lexer) {
 }
 
 //method to tokenize IDs (variables and keywords)
-token* tokenize_ID(lexer* lexer) {
+Token* tokenize_ID(Lexer* lexer) {
     //allocate memory for the string we will be returning
     char* strValue = malloc(sizeof(char));
     //make sure no garbage values, set null character
@@ -122,7 +124,7 @@ token* tokenize_ID(lexer* lexer) {
 }
 
 //method to tokenize numbers
-token* tokenize_number(lexer* lexer) {
+Token* tokenize_number(Lexer* lexer) {
     //allocate memory for the string we will be returning
     char* strValue = malloc(sizeof(char));
     //make sure no garbage values, set null character
@@ -145,14 +147,14 @@ token* tokenize_number(lexer* lexer) {
 }
 
 //just advance the lexer, and return the token we just tokenized
-token* continue_with_token(lexer* lexer, token* token) {
+Token* continue_with_token(Lexer* lexer, Token* token) {
     //advance with the token
     lexer_advance(lexer);
     return token;
 }
 
 //method to get the current char as a char[]
-char* lexer_char_as_string(lexer* lexer) {
+char* lexer_char_as_string(Lexer* lexer) {
     //lexer->c is char, we need to make it a proper null terminated string
     char* char_as_str = malloc(2*sizeof(char));
     //build the null terminated string
@@ -163,7 +165,7 @@ char* lexer_char_as_string(lexer* lexer) {
 }
 
 //free all the memory that is being used by the lexer
-int free_lexer(lexer* lexer) {
+int free_lexer(Lexer* lexer) {
     if(lexer == NULL) {
         //bad return 1
         return 1;
