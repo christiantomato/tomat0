@@ -36,7 +36,7 @@ typedef struct token_struct {
 } Token; 
 
 //declare the initializer for the token
-Token* init_token(int type, char* value);
+Token* init_token(TokenType type, char* value);
 //method to get the token type enum name
 char* token_type_str(Token* token);
 //method to free memory from tokens (good practice)

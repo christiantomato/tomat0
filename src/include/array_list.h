@@ -2,7 +2,10 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-typedef struct generic_list {
+#ifndef ARR_LIST
+#define ARR_LIST
+
+typedef struct generic_array_list {
     //size of the data type
     size_t data_size;
     //number of items in list
@@ -29,3 +32,5 @@ bool is_empty(List* list);
 bool is_max_capacity(List* list);
 //free all memory used by the list
 int free_list(List* list);
+
+#endif

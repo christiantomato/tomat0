@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 //token initializor
-Token* init_token(int type, char* value) {
+Token* init_token(TokenType type, char* value) {
     //allocate space for the token
     Token* token = malloc(sizeof(Token));
     //set the values to what we passed in
