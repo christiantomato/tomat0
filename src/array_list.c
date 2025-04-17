@@ -1,13 +1,12 @@
 //implement our list
 #include "include/array_list.h"
+#include <stdlib.h>
 #include <stdio.h>
 
 //list initializor
-List* init_list(size_t data_size, unsigned int init_capacity) {
+List* init_list(unsigned int init_capacity) {
     //memory allocate for list
-    List* list = malloc(sizeof(list));
-    //set data size
-    list->data_size = data_size;
+    List* list = malloc(sizeof(List));
     //start at 0 items
     list->num_items = 0;
     //set capacity
@@ -24,8 +23,6 @@ void list_add(List* list, void* data) {
     if(is_max_capacity(list)) {
         expand_capacity(list);
     }
-    //allocate the data size to the next memory location we are going to add to
-    list->array[list->num_items] = malloc(list->data_size);
     //add the data item
     list->array[list->num_items] = data;
     //increase count
@@ -59,8 +56,6 @@ void expand_capacity(List* list) {
     list->current_capacity = list->current_capacity * 2;
     //copy the values
     for(int i = 0; i < list->num_items; i++) {
-        //allocate the space for the new array location
-        new_array[i] = malloc(list->data_size);
         new_array[i] = list->array[i];
     }
     //free the old list array
@@ -79,7 +74,7 @@ bool is_max_capacity(List* list) {
     return list->num_items == list->current_capacity;
 }
 
-int free_list(List* list) {
+int free_primitive_list(List* list) {
     if(list == NULL) {
         //failure
         return 1;
@@ -96,3 +91,23 @@ int free_list(List* list) {
     //success
     return 0;
 }
+
+int free_complex_list(List* list, void (*free_func)(void*)) {
+    //free in the same way, but utilizing the specific data types free function to complete free all memory
+    if(list == NULL) {
+        //failure
+        return 1;
+    }
+    //free all contents in the array, then the array, then the list itself. 
+    for(int i = 0; i < list->num_items; i++) {
+        //free pointer to data in the array
+        free_func(list->array[i]);
+    }
+    //free pointer to the array
+    free(list->array);
+    //free the list
+    free(list);
+    //success
+    return 0;
+}
+

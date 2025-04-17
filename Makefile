@@ -4,8 +4,8 @@ exec = tomat0.out
 sources = $(wildcard src/*.c)
 #object files created by compiler, linked together to create exectuable
 objects = $(sources: .c = .o)
-#for debugging, commented out for now because the dysm file is making me go insane and we don't need it right now
-#flags = -g
+#for debugging, using asan for memory problems
+flags = -g -fsanitize=address
 
 #how to create the exectuable
 $(exec): $(objects)
@@ -22,7 +22,7 @@ install:
 	make
 	cp ./tomat0.out /usr/local/bin/tomat0
 
-#clean command to recompile (remove .out ext and object files and dysm because again it makes me go insane)
+#clean command to recompile and remove executables and created files
 clean:
 	-rm *.out
 	-rm *.o 

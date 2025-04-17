@@ -9,8 +9,8 @@ Lexer* init_lexer(char* contents) {
     //allocate memory for the lexer
     Lexer* lexer = malloc(sizeof(Lexer));
     //initialize values 
-    lexer->c = contents[lexer->i];
     lexer->i = 0;
+    lexer->c = contents[lexer->i];
     lexer->contents = contents;
     return lexer;
 }

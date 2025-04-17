@@ -29,7 +29,6 @@ char* token_type_str(Token* token) {
         case TOKEN_PLUS: return "TOKEN_PLUS"; break;
         case TOKEN_HYPHEN: return "TOKEN_HYPHEN"; break;
         case TOKEN_COLON: return "TOKEN_COLON"; break;
-        default: return NULL;
     }
 }
 

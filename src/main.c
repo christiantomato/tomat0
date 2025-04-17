@@ -16,6 +16,23 @@ int main (int argc, char *argv[]) {
         //free the token as it is not needed anymore
         free(token);
     }
+    free_lexer(my_lexer);
+    printf("\n");
+
+    //test out ast nodes and lists together
+    ASTNode* main_node = init_node(AST_PROGRAM);
+    //create 2 variable declaration children nodes
+    ASTNode* var_dec_1 = init_node(AST_VARIABLE_DECLARATION);
+    ASTNode* var_dec_2 = init_node(AST_VARIABLE_DECLARATION);
+    //initialize the list for the 2 children
+    main_node->children = init_list(2);
+    //assign the children to the main node
+    list_add(main_node->children, var_dec_1);
+    list_add(main_node->children, var_dec_2);
+    //check the size of the main node (should be 40 bytes)
+    printf("%lu\n", sizeof(*main_node));
+    //free everything
+    free_node(main_node);
     
     return 0;
 }
