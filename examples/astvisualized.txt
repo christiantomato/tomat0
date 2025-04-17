@@ -1,7 +1,29 @@
 AST for main.tmt should look like:
 
-NODE: Program:
-    NODE: Variable_Declaration:
-    ARGUMENTS: type, identifier, expression
-        NODE: Binary Operation
-        ARGUMENTS: num1, num2, op
+NODE: AST_PROGRAM
+    NODE: AST_VARIABLE_DECLARATION
+        variable_type = "int"
+        variable_name = "myVar"
+        assignment = 
+            NODE: AST_BINARY_OP
+                left = 
+                    NODE: AST_INTEGER
+                        value = 3
+                right = 
+                    NODE: AST_INTEGER
+                        value = 6
+                operand = '+'
+    NODE: AST_VARIABLE_DECLARATION
+        variable_type = "int"
+        variable_name = "myOtherVar"
+        assignment = 
+            NODE: AST_BINARY_OP
+                left = 
+                    NODE: AST_INTEGER
+                        value = 10
+                right = 
+                    NODE: AST_INTEGER
+                        value = 1
+                operand = '-'
+
+

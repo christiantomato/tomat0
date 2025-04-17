@@ -1,4 +1,4 @@
 //ast goal
-int myVar = 3 + 6;
-
+int myVar = 2 + 4;
+int myOtherVar = 10 - 1;
 
