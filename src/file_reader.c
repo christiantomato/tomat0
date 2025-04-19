@@ -10,7 +10,6 @@ char* read_file(const char* filename) {
         //error opening file
         printf("error opening file\n");
     }
-
     //determine file size
     //go to end
     fseek(tomat0_file, 0, SEEK_END);

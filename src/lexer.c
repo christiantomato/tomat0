@@ -42,7 +42,7 @@ Token* tokenize_next(Lexer* lexer) {
         skip_whitespace(lexer);
 
         //check for number first (variables cannot start with numbers in tomat0)
-        if(isnumber(lexer->c)) {
+        if(isdigit(lexer->c)) {
             //tokenize the entire number
             return tokenize_number(lexer);
         }
@@ -130,7 +130,7 @@ Token* tokenize_number(Lexer* lexer) {
     //make sure no garbage values, set null character
     strValue[0] = '\0';
     //build the string as long as we are still on a number
-    while(isnumber(lexer->c)) {
+    while(isdigit(lexer->c)) {
         //create a temp char that will store the current char as a string, so we can concat it later
         char* temp = lexer_char_as_string(lexer);
         //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)

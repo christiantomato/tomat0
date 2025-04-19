@@ -5,7 +5,9 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    char* file_contents = read_file("/Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tmt");
+    // on macbook: /Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tmt
+    // on pc: /home/christiantamayo/Documents/Coding/tomat0/examples/main.tmt
+    char* file_contents = read_file("/home/christiantamayo/Coding/tomat0/examples/main.tmt");
     
     //tokenize with lexer
     printf("%s", file_contents);
@@ -14,7 +16,7 @@ int main (int argc, char *argv[]) {
     while((token = tokenize_next(my_lexer)) != NULL) {
         printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
         //free the token as it is not needed anymore
-        free(token);
+        free_token(token);
     }
     free_lexer(my_lexer);
     printf("\n");
