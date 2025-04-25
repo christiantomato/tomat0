@@ -5,9 +5,7 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    // on macbook: /Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tmt
-    // on pc: /home/christiantamayo/Coding/tomat0/examples/main.tmt
-    char* file_contents = read_file("/home/christiantamayo/Coding/tomat0/examples/main.tmt");
+    char* file_contents = read_file("examples/main.tmt");
     
     //tokenize with lexer
     printf("%s", file_contents);
