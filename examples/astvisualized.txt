@@ -8,10 +8,10 @@ NODE: AST_PROGRAM
             NODE: AST_BINARY_OP
                 left = 
                     NODE: AST_INTEGER
-                        value = 3
+                        value = 2
                 right = 
                     NODE: AST_INTEGER
-                        value = 6
+                        value = 4
                 operand = '+'
     NODE: AST_VARIABLE_DECLARATION
         variable_type = "int"
@@ -23,7 +23,7 @@ NODE: AST_PROGRAM
                         value = 10
                 right = 
                     NODE: AST_INTEGER
-                        value = 1
-                operand = '-'
+                        value = 2
+                operand = '*'
 
 

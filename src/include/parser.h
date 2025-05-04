@@ -13,6 +13,8 @@ typedef struct parser_struct {
 
 } Parser;
 
+Parser* init_parser(List* tokens);
+
 //all parsing functions, that will return a pointer to the tree it has parsed
 ASTNode* parse_expression();
 ASTNode* parse_factor();

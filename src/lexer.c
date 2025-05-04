@@ -28,7 +28,11 @@ void lexer_advance(Lexer* lexer) {
 
 //lexer skip over whitespace 
 void skip_whitespace(Lexer* lexer) {
-    //advance until no longer on whitespace
+    //advance until no longer on whitespace, but make sure not to skip past newlines!
+    if(lexer->c == '\n') {
+        //new line so don't advance the lexer!
+        return;
+    }
     while(isspace(lexer->c)) {
         lexer_advance(lexer);
     }
@@ -58,6 +62,7 @@ Token* tokenize_next(Lexer* lexer) {
                 //since we have a quotation, we need to tokenize the string following it
                 return tokenize_string(lexer); break;
             //all other easy punctuations
+            case '\n': return continue_with_token(lexer, init_token(TOKEN_NEWLINE, lexer_char_as_string(lexer))); break;
             case '=': return continue_with_token(lexer, init_token(TOKEN_EQUALS, lexer_char_as_string(lexer))); break;
             case ';': return continue_with_token(lexer, init_token(TOKEN_SEMI, lexer_char_as_string(lexer))); break;
             case '(': return continue_with_token(lexer, init_token(TOKEN_LPAREN, lexer_char_as_string(lexer))); break;
@@ -66,7 +71,7 @@ Token* tokenize_next(Lexer* lexer) {
             case '\\': return continue_with_token(lexer, init_token(TOKEN_BSLASH, lexer_char_as_string(lexer))); break;
             case '+': return continue_with_token(lexer, init_token(TOKEN_PLUS, lexer_char_as_string(lexer))); break;
             case '-': return continue_with_token(lexer, init_token(TOKEN_HYPHEN, lexer_char_as_string(lexer))); break;
-            case ':': return continue_with_token(lexer, init_token(TOKEN_COLON, lexer_char_as_string(lexer))); break;
+            case '*': return continue_with_token(lexer, init_token(TOKEN_ASTERIK, lexer_char_as_string(lexer))); break;
             default: return NULL;
         }
     }
@@ -155,6 +160,10 @@ Token* continue_with_token(Lexer* lexer, Token* token) {
 
 //method to get the current char as a char[]
 char* lexer_char_as_string(Lexer* lexer) {
+    //special case for new line
+    if(lexer->c == '\n') {
+        return strdup("\\n");
+    }
     //lexer->c is char, we need to make it a proper null terminated string
     char* char_as_str = malloc(2*sizeof(char));
     //build the null terminated string

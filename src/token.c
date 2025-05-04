@@ -19,6 +19,7 @@ char* token_type_str(Token* token) {
     switch(token->type) {
         case TOKEN_ID: return "TOKEN_ID"; break;
         case TOKEN_STRING: return "TOKEN_STRING"; break;
+        case TOKEN_NEWLINE: return "TOKEN_NEWLINE"; break;
         case TOKEN_NUM: return "TOKEN_NUM"; break;
         case TOKEN_EQUALS: return "TOKEN_EQUALS"; break;
         case TOKEN_SEMI: return "TOKEN_SEMI"; break;
@@ -28,7 +29,7 @@ char* token_type_str(Token* token) {
         case TOKEN_BSLASH: return "TOKEN_BSLASH"; break;
         case TOKEN_PLUS: return "TOKEN_PLUS"; break;
         case TOKEN_HYPHEN: return "TOKEN_HYPHEN"; break;
-        case TOKEN_COLON: return "TOKEN_COLON"; break;
+        case TOKEN_ASTERIK: return "TOKEN_ASTERIK"; break;
     }
 }
 

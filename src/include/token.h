@@ -15,6 +15,7 @@ etc.
 typedef enum token_type {
     TOKEN_ID,
     TOKEN_STRING,
+    TOKEN_NEWLINE,
     TOKEN_NUM,
     TOKEN_EQUALS,
     TOKEN_SEMI,
@@ -23,8 +24,9 @@ typedef enum token_type {
     TOKEN_FSLASH,
     TOKEN_BSLASH,
     TOKEN_PLUS,
+    TOKEN_MINUS,
     TOKEN_HYPHEN,
-    TOKEN_COLON
+    TOKEN_ASTERIK
 } TokenType;
 
 //tokens will be of the form (type, value)
