@@ -8,7 +8,7 @@ ASTNode* init_node(NodeType type) {
     //allocate memory for the node
     ASTNode* node = malloc(sizeof(ASTNode));
     if(node == NULL) {
-        printf("tell me");
+        printf("node is null");
     }
     //initialize values
     node->type = type;
