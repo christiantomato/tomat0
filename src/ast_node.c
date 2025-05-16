@@ -1,15 +1,11 @@
 //implementation of the ast node definition
 #include "include/ast_node.h"
 #include <stdlib.h>
-#include <stdio.h>
 
 //node initialization
 ASTNode* init_node(NodeType type) {
     //allocate memory for the node
     ASTNode* node = malloc(sizeof(ASTNode));
-    if(node == NULL) {
-        printf("node is null");
-    }
     //initialize values
     node->type = type;
     node->children = NULL;
