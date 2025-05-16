@@ -10,14 +10,19 @@ typedef struct parser_struct {
     ASTNode* root;
     //give it the list of tokens that we will be parsing
     List* tokens;
-    //index for the list of tokens, which we can use for current and next token
-    unsigned int index;
+    //the current token
+    Token* current_token;
 } Parser;
 
 //initialize the parser and pass in the tokens we got from lexical analysis
 Parser* init_parser(List* tokens);
 //main function which parses all the tokens and constructs the tree to the root
 void parser_parse(Parser* parser);
+
+//helper method to move onto the next token
+void parser_advance(Parser* parser);
+//helper method to skip comments
+void parser_skip_comments(Parser* parser);
 
 //parsing functions that return pointers to the subtree that they have parsed
 
