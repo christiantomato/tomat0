@@ -20,7 +20,7 @@ List* init_list(unsigned int init_capacity);
 //adds data to the end of the list - use a void pointer, as we don't know the type of the data. 
 void list_add(List* list, void* data);
 //remove data at a specified index, and the list will shift over so there is no gaps
-void list_remove(List* list, unsigned int index);
+void list_remove(List* list, unsigned int index, void (*free_func)(void*));
 //list helper method to expand capacity
 void expand_capacity(List* list);
 //check for empty list

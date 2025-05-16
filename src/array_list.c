@@ -30,7 +30,7 @@ void list_add(List* list, void* data) {
 }
 
 //removes data from our list
-void list_remove(List* list, unsigned int index) {
+void list_remove(List* list, unsigned int index, void (*free_func)(void*)) {
     //make sure the index is valid
     if(index >= list->num_items) {
         //bad
@@ -38,8 +38,7 @@ void list_remove(List* list, unsigned int index) {
         return;
     }
     //goodbye data
-    list->array[index] = NULL;
-    //shift stuff over
+    free_func(list->array[index]);
     for(int i = index + 1; i < list->num_items; i++) {
         //shift to previous
         list->array[i-1] = list->array[i];
