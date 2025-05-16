@@ -46,3 +46,8 @@ int free_token(Token* token) {
     //success
     return 0;
 }
+
+//wrapper for free token
+void free_token_wrapper(void* token) {
+    free_token((Token*) token);
+}

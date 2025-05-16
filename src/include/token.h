@@ -43,5 +43,7 @@ Token* init_token(TokenType type, char* value);
 char* token_type_str(Token* token);
 //method to free memory from tokens (good practice)
 int free_token(Token* token);
+//wrapper for free token so we can free tokens from out parser tokens list
+void free_token_wrapper(void* token);
 
 #endif
