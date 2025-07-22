@@ -17,6 +17,9 @@ Token* init_token(TokenType type, char* value) {
 char* token_type_str(Token* token) {
     //switch on the token type
     switch(token->type) {
+        case TOKEN_KEYWORD_INT: return "TOKEN_KEYWORD_INT"; break;
+        case TOKEN_KEYWORD_STRING: return "TOKEN_KEYWORD_STRING"; break;
+        case TOKEN_KEYWORD_SOUT: return "TOKEN_KEYWORD_SOUT"; break;
         case TOKEN_ID: return "TOKEN_ID"; break;
         case TOKEN_STRING: return "TOKEN_STRING"; break;
         case TOKEN_NEWLINE: return "TOKEN_NEWLINE"; break;

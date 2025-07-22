@@ -13,6 +13,9 @@ etc.
 
 //enum for the types of tokens we will be classifying
 typedef enum token_type {
+    TOKEN_KEYWORD_INT,
+    TOKEN_KEYWORD_STRING,
+    TOKEN_KEYWORD_SOUT,
     TOKEN_ID,
     TOKEN_STRING,
     TOKEN_NEWLINE,
@@ -24,7 +27,6 @@ typedef enum token_type {
     TOKEN_FSLASH,
     TOKEN_BSLASH,
     TOKEN_PLUS,
-    TOKEN_MINUS,
     TOKEN_HYPHEN,
     TOKEN_ASTERIK
 } TokenType;

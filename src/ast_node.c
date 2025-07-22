@@ -12,14 +12,17 @@ ASTNode* init_node(NodeType type) {
     //initialize values needed for each node specilization
     switch(type) {
         case AST_VARIABLE_DECLARATION:
-            node->specialization.variable_declaration.variable_type = NULL;
-            node->specialization.variable_declaration.variable_name = NULL;
+            node->specialization.variable_declaration.variable_type = '\0';
+            node->specialization.variable_declaration.variable_name = '\0';
             node->specialization.variable_declaration.assignment = NULL;
+            break;
+        case AST_PRINT_STATEMENT:
+            node->specialization.print_statement.statement = NULL;
             break;
         case AST_BINARY_OPERATION:
             node->specialization.binary_operation.left = NULL;
             node->specialization.binary_operation.right = NULL;
-            node->specialization.binary_operation.operand = NULL;
+            node->specialization.binary_operation.operand = '\0';
             break;
         case AST_INTEGER:
             node->specialization.integer.value = 0;
@@ -38,6 +41,7 @@ char* node_type_str(ASTNode* node) {
     switch(node->type) {
         case AST_PROGRAM: return "AST_PROGRAM"; break;
         case AST_VARIABLE_DECLARATION: return "AST_VARIABLE_DECLARATION"; break;
+        case AST_PRINT_STATEMENT: return "AST_PRINT_STATEMENT"; break;
         case AST_BINARY_OPERATION: return "AST_BINARY_OPERATION"; break;
         case AST_INTEGER: return "AST_INTEGER"; break;
     }
@@ -55,6 +59,9 @@ int free_node(ASTNode* node) {
             free(node->specialization.variable_declaration.variable_type);
             free(node->specialization.variable_declaration.variable_name);
             free(node->specialization.variable_declaration.assignment);
+            break;
+        case AST_PRINT_STATEMENT:
+            free(node->specialization.print_statement.statement);
             break;
         case AST_BINARY_OPERATION:
             free(node->specialization.binary_operation.left);

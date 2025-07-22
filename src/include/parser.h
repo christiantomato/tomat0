@@ -21,13 +21,20 @@ void parser_parse(Parser* parser);
 
 //helper method to move onto the next token
 void parser_advance(Parser* parser);
+//helper method to look ahead in the tokens that are coming
+Token* parser_peek(Parser* parser, int ahead);
 //helper method to skip comments
 void parser_skip_comments(Parser* parser);
 
-//parsing functions that return pointers to the subtree that they have parsed
+//all parsing functions that return pointers to the subtree that they have parsed
 
-//tomat0 will be parsed line by line
+//parse a statement, line by line
 ASTNode* parse_line(Parser* parser);
+//parse a variable declaration
+ASTNode* parse_variable_declaration(Parser* parser);
+//parse a print statement
+ASTNode* parse_print_statement(Parser* parser);
+
 //arithmetic parsing hierarchy (expressions -> terms -> factors)
 ASTNode* parse_expression(Parser* parser);
 ASTNode* parse_term(Parser* parser);

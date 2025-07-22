@@ -4,12 +4,13 @@
 Parser* init_parser(List* tokens) {
     //create a parser and allocate memory
     Parser* parser = malloc(sizeof(Parser));
-    //initialize root node
+    //initialize the root node to be a PROGRAM node
     parser->root = init_node(AST_PROGRAM);
-    //use the list we passed
+    //use the list of tokens passed in
     parser->tokens = tokens;
     //set the initial token
     parser->current_token = parser->tokens->array[0];
+    return parser;
 }
 
 //parse each line and add it to the children of the program node of our parser
@@ -21,10 +22,20 @@ void parser_parse(Parser* parser) {
     }
 }
 
+//"consumes" the token it is on, and sets the new current token to the next in the list
 void parser_advance(Parser* parser) {
-    //remove from the tokens list, list will shift to index 0 allowing current token to become the next one!
+    //remove it from the tokens list, list will shift things over to index 0, and set the new current token
     list_remove(parser->tokens, 0, free_token_wrapper);
+    //update
+    parser->current_token = parser->tokens->array[0];
 }
+
+//look ahead to the next token, to help with parsing logic
+Token* parser_peek(Parser* parser, int ahead) {
+    //return the token at however many places ahead
+    return parser->tokens->array[ahead];
+}
+
 
 void parser_skip_comments(Parser* parser) {
     //skip all comments until we reach an actual line to parse
@@ -39,32 +50,43 @@ void parser_skip_comments(Parser* parser) {
             parser_advance(parser);
         }
         else {
-            //we need to start parsing
+            //done skipping all comments, parsing will take place
             break;
         }
     }
 }
 
-//parse the line
+//parsing functions returning a node
+
+//parse the line (tomat0 is line by line, so this will simplify our life)
 ASTNode* parse_line(Parser* parser) {
-    //the node to be returned
-    ASTNode* line_node;
-    //parse until we reach the newline token
-    while(parser->current_token->type != TOKEN_NEWLINE) {
-        //deal with all cases
-        
+    //go through each type of statement it could be 
+    if(parser->current_token->type == TOKEN_KEYWORD_INT || parser->current_token->type == TOKEN_KEYWORD_STRING) {
+       //parsing a variable declaration
+       return parse_variable_declaration(parser);
     }
-    //advance past the newline now
-    parser_advance(parser);
-    //return the node
-    return line_node;
+    if(parser->current_token->type == TOKEN_KEYWORD_SOUT) {
+        //parsing a print statement
+        return parse_print_statement(parser);
+    }
 }
+
+ASTNode* parse_variable_declaration(Parser* parser) {
+
+}
+
+ASTNode* parse_print_statement(Parser* parser) {
+
+}
+
 ASTNode* parse_expression(Parser* parser) {
 
 }
+
 ASTNode* parse_term(Parser* parser) {
 
 }
+
 ASTNode* parse_factor(Parser* parser) {
 
 }

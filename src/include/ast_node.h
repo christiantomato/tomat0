@@ -15,6 +15,7 @@
 typedef enum ast_node_type {
     AST_PROGRAM,
     AST_VARIABLE_DECLARATION,
+    AST_PRINT_STATEMENT,
     AST_BINARY_OPERATION,
     AST_INTEGER,
 } NodeType;
@@ -29,6 +30,10 @@ typedef struct ast_variable_declaration {
     struct ast_node_struct* assignment;
 } VariableDeclaration;
 
+typedef struct ast_print_statement {
+    struct ast_node_struct* statement;
+} PrintStatement;
+
 typedef struct ast_binary_operation {
     struct ast_node_struct* left;
     struct ast_node_struct* right;
@@ -42,6 +47,7 @@ typedef struct ast_integer {
 //unionize all the different node types
 typedef union ast_node_specializations {
     VariableDeclaration variable_declaration;
+    PrintStatement print_statement;
     BinaryOperation binary_operation;
     IntegerLiteral integer;
 } ASTSpecialization;

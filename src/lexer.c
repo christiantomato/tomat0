@@ -51,7 +51,7 @@ Token* tokenize_next(Lexer* lexer) {
             return tokenize_number(lexer);
         }
         //for variables, keywords
-        if(isalnum(lexer->c)) {
+        if(isalpha(lexer->c)) {
             //tokenize the variable/keyword
             return tokenize_ID(lexer);
         }
@@ -105,13 +105,13 @@ Token* tokenize_string(Lexer* lexer) {
     return init_token(TOKEN_STRING, strValue);
 }
 
-//method to tokenize IDs (variables and keywords)
+//method to tokenize identifiers (and keywords)
 Token* tokenize_ID(Lexer* lexer) {
     //allocate memory for the string we will be returning
     char* strValue = malloc(sizeof(char));
     //make sure no garbage values, set null character
     strValue[0] = '\0';
-    //build the string as long as our ID is alpha numeric
+    //build the string as long as our ID is alpha numeric (therefore variable names are only alphanumeric!!!)
     while(isalnum(lexer->c)) {
         //create a temp char that will store the current char as a string, so we can concat it later
         char* temp = lexer_char_as_string(lexer);
@@ -124,8 +124,24 @@ Token* tokenize_ID(Lexer* lexer) {
         //advance to next character
         lexer_advance(lexer);
     }
-    //once finisished, return string as token
-    return init_token(TOKEN_ID, strValue);
+
+    //check if it is a keyword
+    if(strcmp(strValue, "int") == 0) {
+        //integer declaration keyword
+        return init_token(TOKEN_KEYWORD_INT, strValue);
+    }
+    else if(strcmp(strValue, "string") == 0) {
+        //string declaration keyword
+        return init_token(TOKEN_KEYWORD_STRING, strValue);
+    }
+    else if(strcmp(strValue, "sout") == 0) {
+        //print statement keyword
+        return init_token(TOKEN_KEYWORD_SOUT, strValue);
+    }
+    else {
+        //return as a regular identifier (for function or variable names)
+        return init_token(TOKEN_ID, strValue);
+    }
 }
 
 //method to tokenize numbers
