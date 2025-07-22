@@ -24,7 +24,7 @@ void parser_parse(Parser* parser) {
 
 //"consumes" the token it is on, and sets the new current token to the next in the list
 void parser_advance(Parser* parser) {
-    //remove it from the tokens list, list will shift things over to index 0, and set the new current token
+    //remove the current from the tokens list, list will shift things over to index 0, and set the new current token
     list_remove(parser->tokens, 0, free_token_wrapper);
     //update
     parser->current_token = parser->tokens->array[0];
@@ -72,7 +72,22 @@ ASTNode* parse_line(Parser* parser) {
 }
 
 ASTNode* parse_variable_declaration(Parser* parser) {
+    //create the node we will return
+    ASTNode* declarationNode = init_node(AST_VARIABLE_DECLARATION);
 
+    //first step is to determine the variable type
+    if(parser->current_token->type == TOKEN_KEYWORD_INT) {
+        declarationNode->specialization.variable_declaration.variable_type = "int";
+    }
+    else if(parser->current_token->type == TOKEN_KEYWORD_STRING) {
+        declarationNode->specialization.variable_declaration.variable_type = "string";
+    }
+
+    //advance to next token
+    parser_advance(parser);
+
+    //second step is to get the variable name
+    
 }
 
 ASTNode* parse_print_statement(Parser* parser) {

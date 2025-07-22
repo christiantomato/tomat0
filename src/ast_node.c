@@ -12,8 +12,8 @@ ASTNode* init_node(NodeType type) {
     //initialize values needed for each node specilization
     switch(type) {
         case AST_VARIABLE_DECLARATION:
-            node->specialization.variable_declaration.variable_type = '\0';
-            node->specialization.variable_declaration.variable_name = '\0';
+            node->specialization.variable_declaration.variable_type = NULL;
+            node->specialization.variable_declaration.variable_name = NULL;
             node->specialization.variable_declaration.assignment = NULL;
             break;
         case AST_PRINT_STATEMENT:
@@ -22,7 +22,7 @@ ASTNode* init_node(NodeType type) {
         case AST_BINARY_OPERATION:
             node->specialization.binary_operation.left = NULL;
             node->specialization.binary_operation.right = NULL;
-            node->specialization.binary_operation.operand = '\0';
+            node->specialization.binary_operation.operand = NULL;
             break;
         case AST_INTEGER:
             node->specialization.integer.value = 0;
