@@ -28,6 +28,8 @@ char* token_type_str(Token* token) {
         case TOKEN_SEMI: return "TOKEN_SEMI"; break;
         case TOKEN_LPAREN: return "TOKEN_LPAREN"; break;
         case TOKEN_RPAREN: return "TOKEN_RPAREN"; break;
+        case TOKEN_LCHEVRON: return "TOKEN_LCHEVRON"; break;
+        case TOKEN_RCHEVRON: return "TOKEN_RCHEVRON"; break;
         case TOKEN_FSLASH: return "TOKEN_FSLASH"; break;
         case TOKEN_BSLASH: return "TOKEN_BSLASH"; break;
         case TOKEN_PLUS: return "TOKEN_PLUS"; break;

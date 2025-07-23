@@ -1,4 +1,4 @@
-(current goal for the ast)
+> current goal for the ast
 int myVar = 2 + 4
 int myOtherVar = 10 * 2
 

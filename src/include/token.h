@@ -24,6 +24,8 @@ typedef enum token_type {
     TOKEN_SEMI,
     TOKEN_LPAREN,
     TOKEN_RPAREN, 
+    TOKEN_LCHEVRON,
+    TOKEN_RCHEVRON,
     TOKEN_FSLASH,
     TOKEN_BSLASH,
     TOKEN_PLUS,

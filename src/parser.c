@@ -41,7 +41,7 @@ void parser_skip_comments(Parser* parser) {
     //skip all comments until we reach an actual line to parse
     while(true) {
         //look at the first token on the line
-        if(parser->current_token->type == TOKEN_LPAREN) {
+        if(parser->current_token->type == TOKEN_RCHEVRON) {
             //skip the line by advancing until the next one
             while(parser->current_token->type != TOKEN_NEWLINE) {
                 parser_advance(parser);
@@ -57,6 +57,7 @@ void parser_skip_comments(Parser* parser) {
 }
 
 //parsing functions returning a node
+
 
 //parse the line (tomat0 is line by line, so this will simplify our life)
 ASTNode* parse_line(Parser* parser) {
@@ -87,7 +88,7 @@ ASTNode* parse_variable_declaration(Parser* parser) {
     parser_advance(parser);
 
     //second step is to get the variable name
-    
+
 }
 
 ASTNode* parse_print_statement(Parser* parser) {
