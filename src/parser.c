@@ -72,27 +72,87 @@ ASTNode* parse_line(Parser* parser) {
     }
 }
 
+//parse a variable declaration / assignment (declarations in tomat0 must have a value aswell)
 ASTNode* parse_variable_declaration(Parser* parser) {
     //create the node we will return
-    ASTNode* declarationNode = init_node(AST_VARIABLE_DECLARATION);
+    ASTNode* var_dec_node = init_node(AST_VARIABLE_DECLARATION);
 
     //first step is to determine the variable type
+
     if(parser->current_token->type == TOKEN_KEYWORD_INT) {
-        declarationNode->specialization.variable_declaration.variable_type = "int";
+        //set the variable type to integer
+        var_dec_node->specialization.variable_declaration.variable_type = "int";
     }
     else if(parser->current_token->type == TOKEN_KEYWORD_STRING) {
-        declarationNode->specialization.variable_declaration.variable_type = "string";
+        //set the variable type to string
+        var_dec_node->specialization.variable_declaration.variable_type = "string";
     }
 
-    //advance to next token
+    //advance to the next token
     parser_advance(parser);
 
-    //second step is to get the variable name
+    //second step is to expect/get the variable name
 
+    if(parser->current_token->type == TOKEN_ID) {
+        //assign the variable name
+        var_dec_node->specialization.variable_declaration.variable_name = parser->current_token->value;
+    }
+    else {
+        //problem
+        return NULL;
+    }
+
+    //advance to next
+    parser_advance(parser);
+
+    //third step is to expect an equals
+
+    if(parser->current_token->type == TOKEN_EQUALS) {
+        //this is expected, we can move on
+        parser_advance(parser);
+    }
+    else {
+        //problem
+        return NULL;
+    }
+
+    //last step is to get the value that is being assigned
+    var_dec_node->specialization.variable_declaration.assignment = parse_expression(parser);
+    
+    //return the node
+    return var_dec_node;
 }
 
+//parse a print statement - sout(statement)
 ASTNode* parse_print_statement(Parser* parser) {
+    //create the node we will return
+    ASTNode* print_node = init_node(AST_PRINT_STATEMENT);
 
+    //expect and eat the LPAREN
+    if(parser->current_token->type == TOKEN_LPAREN) {
+        //expected, EAT
+        parser_advance(parser);
+    }
+    else {
+        //problem 
+        return NULL;
+    }
+
+    //next we have to evaluate the statement inside the parens
+    print_node->specialization.print_statement.statement = parse_expression(parser);
+
+    //after that, ensure a closing paren
+    if(parser->current_token->type == TOKEN_RPAREN) {
+        //expected, CONSUME
+        parser_advance(parser);
+    }
+    else {
+        //bad syntax, problem
+        return NULL; 
+    }
+
+    //return the print statement node
+    return print_node;
 }
 
 ASTNode* parse_expression(Parser* parser) {
