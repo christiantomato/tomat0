@@ -155,16 +155,138 @@ ASTNode* parse_print_statement(Parser* parser) {
     return print_node;
 }
 
+/*
+Grammar for our LL(1) Recursive Descent Parser
+
+E -> T E'
+E' -> (+ -) T E' | epsilon
+T -> F T'
+T' -> (* /) F T' | epsilon
+F -> TOKEN_ID | Literal | (E) | -F
+*/
+
+//build up the expression tree using the given grammar rules
 ASTNode* parse_expression(Parser* parser) {
+    //parse the left term
+    ASTNode* left = parse_term(parser);
 
+    //continue the loop as long as we are doing addition or subtraction to build up our tree
+    while(parser->current_token->type == TOKEN_PLUS || parser->current_token->type == TOKEN_HYPHEN) {
+        //get the operand
+        char* operand = parser->current_token->value;
+
+        //move past
+        parser_advance(parser);
+
+        //parse the right term
+        ASTNode* right = parse_term(parser);
+
+        //create the binary operation node
+        ASTNode* binary_op_node = init_node(AST_BINARY_OPERATION);
+        binary_op_node->specialization.binary_operation.left = left;
+        binary_op_node->specialization.binary_operation.operand = operand;
+        binary_op_node->specialization.binary_operation.right = right;
+
+        //left is now this new node, building up the tree with correct associativity
+        left = binary_op_node;
+    }
+
+    //once done return left
+    return left;
 }
 
+//same concept as expression, just different operand
 ASTNode* parse_term(Parser* parser) {
+    //parse the left term
+    ASTNode* left = parse_factor(parser);
 
+    //continue the loop as long as we are doing addition or subtraction to build up our tree
+    while(parser->current_token->type == TOKEN_ASTERIK || parser->current_token->type == TOKEN_FSLASH) {
+        //get the operand
+        char* operand = parser->current_token->value;
+
+        //move past
+        parser_advance(parser);
+
+        //parse the right term
+        ASTNode* right = parse_factor(parser);
+
+        //create the binary operation node
+        ASTNode* binary_op_node = init_node(AST_BINARY_OPERATION);
+        binary_op_node->specialization.binary_operation.left = left;
+        binary_op_node->specialization.binary_operation.operand = operand;
+        binary_op_node->specialization.binary_operation.right = right;
+
+        //left is now this new node, building up the tree with correct associativity
+        left = binary_op_node;
+    }
+
+    //once done return left
+    return left;
 }
 
+//Contains the terminals, just a bunch of if statements
 ASTNode* parse_factor(Parser* parser) {
 
+    //check for parenthesized expression
+    if(parser->current_token->type == TOKEN_LPAREN) {
+        //advance to the expression
+        parser_advance(parser);
+
+        //parse the expression
+        ASTNode* expression_node = parse_expression(parser);
+
+        //expect a closing parenthesis
+        if(parser->current_token->type == TOKEN_RPAREN) {
+            //advance past it
+            parser_advance(parser);
+            //return the expression node
+            return expression_node;
+        }
+        else {
+            //problem
+            return NULL;
+        }
+    }
+
+    //check for negation
+    if(parser->current_token->type == TOKEN_HYPHEN) {
+        //advance to the factor
+        parser_advance(parser);
+        //create the negation node
+        ASTNode* negation_node = init_node(AST_NEGATION);
+        //assign
+        negation_node->specialization.negation.factor = parse_factor(parser);
+        //return the node
+        return negation_node;
+    }
+
+    //check for an identifier
+    if(parser->current_token->type == TOKEN_ID) {
+        //create the AST_VARIABLE
+        ASTNode* variable_node = init_node(AST_VARIABLE);
+        //set the name
+        variable_node->specialization.variable.variable_name = parser->current_token->value;
+        //advance past
+        parser_advance(parser);
+        //return the node
+        return variable_node;
+    }
+
+    //check for an integer literal
+    if(parser->current_token->type == TOKEN_NUM) {
+        //create the AST_INTEGER
+        ASTNode* integer_node = init_node(AST_INTEGER);
+        //assign
+        integer_node->specialization.integer_literal.value = parser->current_token->value;
+        //advance past the number
+        parser_advance(parser);
+        //return the node
+        return integer_node;
+    }
+
+    //nothing expected, problem
+    return NULL;
 }
 
 

@@ -24,8 +24,14 @@ ASTNode* init_node(NodeType type) {
             node->specialization.binary_operation.right = NULL;
             node->specialization.binary_operation.operand = NULL;
             break;
+        case AST_NEGATION:
+            node->specialization.negation.factor = NULL;
+            break;
+        case AST_VARIABLE:
+            node->specialization.variable.variable_name = NULL;
+            node->specialization.variable.value = NULL;
         case AST_INTEGER:
-            node->specialization.integer.value = 0;
+            node->specialization.integer_literal.value = 0;
             break;
         default:
             //specialization not needed (ex. AST_PROGRAM)
@@ -43,6 +49,8 @@ char* node_type_str(ASTNode* node) {
         case AST_VARIABLE_DECLARATION: return "AST_VARIABLE_DECLARATION"; break;
         case AST_PRINT_STATEMENT: return "AST_PRINT_STATEMENT"; break;
         case AST_BINARY_OPERATION: return "AST_BINARY_OPERATION"; break;
+        case AST_NEGATION: return "AST_NEGATION"; break;
+        case AST_VARIABLE: return "AST_VARIABLE"; break;
         case AST_INTEGER: return "AST_INTEGER"; break;
     }
 }
@@ -67,6 +75,15 @@ int free_node(ASTNode* node) {
             free(node->specialization.binary_operation.left);
             free(node->specialization.binary_operation.right);
             free(node->specialization.binary_operation.operand);
+            break;
+        case AST_NEGATION:
+            free(node->specialization.negation.factor);
+            break;
+        case AST_VARIABLE:
+            free(node->specialization.variable.value);
+            free(node->specialization.variable.variable_name);
+        case AST_INTEGER: 
+            free(node->specialization.integer_literal.value);
             break;
         default:
             //no additional specialized data to be freed

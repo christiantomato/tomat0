@@ -1,9 +1,10 @@
 //define nodes for the abstract syntax tree
 /*
-- variable assignments
-- factors vs terms
-- identifiers
-- statements
+- Declarations
+- Function Calls
+- Keywords
+- Binary Operations
+- Literals
 */
 
 #include "array_list.h"
@@ -17,6 +18,8 @@ typedef enum ast_node_type {
     AST_VARIABLE_DECLARATION,
     AST_PRINT_STATEMENT,
     AST_BINARY_OPERATION,
+    AST_NEGATION,
+    AST_VARIABLE,
     AST_INTEGER,
 } NodeType;
 
@@ -40,6 +43,15 @@ typedef struct ast_binary_operation {
     char* operand;
 } BinaryOperation;
 
+typedef struct ast_negation {
+    struct ast_node_struct* factor;
+} Negation;
+
+typedef struct ast_variable {
+    char* variable_name;
+    struct ast_node_struct* value;
+} Variable;
+
 typedef struct ast_integer {
     int value;
 } IntegerLiteral;
@@ -49,7 +61,9 @@ typedef union ast_node_specializations {
     VariableDeclaration variable_declaration;
     PrintStatement print_statement;
     BinaryOperation binary_operation;
-    IntegerLiteral integer;
+    Negation negation;
+    Variable variable;
+    IntegerLiteral integer_literal;
 } ASTSpecialization;
 
 //fully declare the ast node - each node will be of the form (type, children[], node specialization (arguments, properties, etc.))
