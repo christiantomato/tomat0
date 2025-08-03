@@ -1,0 +1,6 @@
+		NODE: AST_INTEGER
+value = 1
+N
+data_type = int
+variable_name = x
+assignment = 

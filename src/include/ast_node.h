@@ -8,6 +8,7 @@
 */
 
 #include "array_list.h"
+#include <stdio.h>
 
 #ifndef AST_NODE
 #define AST_NODE
@@ -80,6 +81,10 @@ typedef struct ast_node_struct {
 ASTNode* init_node(NodeType type);
 //get the node type enum name
 char* node_type_str(ASTNode* node);
+//write to file the tree representation from any node
+void print_ast(ASTNode* root, int indent);
+//helper method for indentation
+void print_indent(FILE* file, int indent);
 //free memory of a node
 int free_node(ASTNode* node);
 //wrapper for free node, so we can pass it in to our free_complex_list for the children

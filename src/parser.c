@@ -8,26 +8,34 @@ Parser* init_parser(List* tokens) {
     parser->root = init_node(AST_PROGRAM);
     //use the list of tokens passed in
     parser->tokens = tokens;
-    //set the initial token
+    //set the initial token to starting position in array
     parser->current_token = parser->tokens->array[0];
+    //initialize the index at zero
+    parser->index = 0;
     return parser;
 }
 
 //parse each line and add it to the children of the program node of our parser
 void parser_parse(Parser* parser) {
-    //while there are still tokens, parse line by line
-    while(!is_empty(parser->tokens)) {
-        parser_skip_comments(parser);
+    //parse until we reach the end of file token
+    while(parser->current_token->type != TOKEN_EOF) {
+        //first skip everything that does not need to be parsed
+        parser_skip(parser);
+        //check again for end of file again after skipping
+        if(parser->current_token->type == TOKEN_EOF) {
+            //finished parsing
+            break;
+        }
+        //now we can parse lines and add to the children of the program node safely
         list_add(parser->root->children, parse_line(parser));
     }
 }
 
 //"consumes" the token it is on, and sets the new current token to the next in the list
 void parser_advance(Parser* parser) {
-    //remove the current from the tokens list, list will shift things over to index 0, and set the new current token
-    list_remove(parser->tokens, 0, free_token_wrapper);
+    parser->index++;
     //update
-    parser->current_token = parser->tokens->array[0];
+    parser->current_token = parser->tokens->array[parser->index];
 }
 
 //look ahead to the next token, to help with parsing logic
@@ -36,28 +44,29 @@ Token* parser_peek(Parser* parser, int ahead) {
     return parser->tokens->array[ahead];
 }
 
-
-void parser_skip_comments(Parser* parser) {
-    //skip all comments until we reach an actual line to parse
+//skip comments and blank lines
+void parser_skip(Parser* parser) {
     while(true) {
-        //look at the first token on the line
+        //if rchevron, skip the comment
         if(parser->current_token->type == TOKEN_RCHEVRON) {
-            //skip the line by advancing until the next one
-            while(parser->current_token->type != TOKEN_NEWLINE) {
+            //skip everything until we hit a newline or end token
+            while(parser->current_token->type != TOKEN_NEWLINE && parser->current_token->type != TOKEN_EOF) {
                 parser_advance(parser);
             }
-            //move past the token newline to get onto next line, and then we check for comments again
+        }
+        //if we have a blank line
+        else if(parser->current_token->type == TOKEN_NEWLINE) {
+            //skip it
             parser_advance(parser);
         }
         else {
-            //done skipping all comments, parsing will take place
+            //once all the unneccesary stuff is skipped, exit
             break;
         }
     }
 }
 
 //parsing functions returning a node
-
 
 //parse the line (tomat0 is line by line, so this will simplify our life)
 ASTNode* parse_line(Parser* parser) {
@@ -66,9 +75,12 @@ ASTNode* parse_line(Parser* parser) {
        //parsing a variable declaration
        return parse_variable_declaration(parser);
     }
-    if(parser->current_token->type == TOKEN_KEYWORD_SOUT) {
+    else if(parser->current_token->type == TOKEN_KEYWORD_SOUT) {
         //parsing a print statement
         return parse_print_statement(parser);
+    }
+    else {
+        return NULL;
     }
 }
 
@@ -278,7 +290,7 @@ ASTNode* parse_factor(Parser* parser) {
         //create the AST_INTEGER
         ASTNode* integer_node = init_node(AST_INTEGER);
         //assign
-        integer_node->specialization.integer_literal.value = parser->current_token->value;
+        integer_node->specialization.integer_literal.value = atoi(parser->current_token->value);
         //advance past the number
         parser_advance(parser);
         //return the node
@@ -288,5 +300,6 @@ ASTNode* parse_factor(Parser* parser) {
     //nothing expected, problem
     return NULL;
 }
+
 
 

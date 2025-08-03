@@ -12,6 +12,8 @@ typedef struct parser_struct {
     List* tokens;
     //the current token
     Token* current_token;
+    //index for the tokens list
+    unsigned int index;
 } Parser;
 
 //initialize the parser and pass in the tokens we got from lexical analysis
@@ -23,8 +25,8 @@ void parser_parse(Parser* parser);
 void parser_advance(Parser* parser);
 //helper method to look ahead in the tokens that are coming
 Token* parser_peek(Parser* parser, int ahead);
-//helper method to skip comments
-void parser_skip_comments(Parser* parser);
+//helper method to skip comments and blank lines
+void parser_skip(Parser* parser);
 
 //all parsing functions that return pointers to the subtree that they have parsed
 

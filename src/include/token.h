@@ -30,7 +30,8 @@ typedef enum token_type {
     TOKEN_BSLASH,
     TOKEN_PLUS,
     TOKEN_HYPHEN,
-    TOKEN_ASTERIK
+    TOKEN_ASTERIK,
+    TOKEN_EOF
 } TokenType;
 
 //tokens will be of the form (type, value)

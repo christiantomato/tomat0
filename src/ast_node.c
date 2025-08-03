@@ -8,7 +8,7 @@ ASTNode* init_node(NodeType type) {
     ASTNode* node = malloc(sizeof(ASTNode));
     //initialize values
     node->type = type;
-    node->children = NULL;
+    node->children = init_list(5);
     //initialize values needed for each node specilization
     switch(type) {
         case AST_VARIABLE_DECLARATION:
@@ -43,7 +43,7 @@ ASTNode* init_node(NodeType type) {
 
 //node type as string
 char* node_type_str(ASTNode* node) {
-    //switch on the token type
+    //switch on the node type
     switch(node->type) {
         case AST_PROGRAM: return "AST_PROGRAM"; break;
         case AST_VARIABLE_DECLARATION: return "AST_VARIABLE_DECLARATION"; break;
@@ -52,6 +52,79 @@ char* node_type_str(ASTNode* node) {
         case AST_NEGATION: return "AST_NEGATION"; break;
         case AST_VARIABLE: return "AST_VARIABLE"; break;
         case AST_INTEGER: return "AST_INTEGER"; break;
+    }
+}
+
+//writes the ast to a file
+void print_ast(ASTNode* root, int indent) {
+    //create a new file and open it in write mode
+    FILE* ast_file = fopen("ast_output.txt", "w");
+
+    //print the indentation
+    print_indent(ast_file, indent);
+
+    //always start with node title
+    fprintf(ast_file, "NODE: %s\n", node_type_str(root));
+
+    //switch on the node type
+    switch(root->type) {
+
+        case AST_PROGRAM:
+            //iterate through the children statements and write them to file
+            for(int i = 0; i < root->children->num_items; i++) {
+                //(indent always 1)
+                print_ast(root->children->array[i], 1);
+            }
+            break;
+            
+        case AST_VARIABLE_DECLARATION:
+            //list out the relevant information
+            fprintf(ast_file, "data_type = %s\n", root->specialization.variable_declaration.variable_type);
+            fprintf(ast_file, "variable_name = %s\n", root->specialization.variable_declaration.variable_name);
+            //assignment is also a node, so recurse into that
+            fprintf(ast_file, "assignment = \n");
+            print_ast(root->specialization.variable_declaration.assignment, indent + 1);
+            break;
+
+        case AST_PRINT_STATEMENT:
+            //list parameters
+            fprintf(ast_file, "output = \n");
+            //output is a node, recurse
+            print_ast(root->specialization.print_statement.statement, indent + 1);
+            break;
+
+        case AST_BINARY_OPERATION:
+            //left node
+            fprintf(ast_file, "left = \n");
+            print_ast(root->specialization.binary_operation.left, indent + 1);
+            //right node
+            fprintf(ast_file, "right = \n");
+            print_ast(root->specialization.binary_operation.right, indent + 1);
+            //operand
+            fprintf(ast_file, "operand = %s\n", root->specialization.binary_operation.operand);
+            break;
+
+        case AST_NEGATION:
+            fprintf(ast_file, "negate (-) = \n");
+            print_ast(root->specialization.negation.factor, indent + 1);
+            break;
+
+        case AST_VARIABLE:
+            fprintf(ast_file, "variable_name = %s\n", root->specialization.variable.variable_name);
+            fprintf(ast_file, "value = \n");
+            print_ast(root->specialization.variable.value, indent + 1);
+            break;
+
+        case AST_INTEGER:
+            fprintf(ast_file, "value = %d\n", root->specialization.integer_literal.value);
+            break;
+    }
+}
+
+//helper
+void print_indent(FILE* file, int indent) {
+    for(int i = 0; i < indent; i++) {
+        fprintf(file, "\t");
     }
 }
 
@@ -83,7 +156,8 @@ int free_node(ASTNode* node) {
             free(node->specialization.variable.value);
             free(node->specialization.variable.variable_name);
         case AST_INTEGER: 
-            free(node->specialization.integer_literal.value);
+            //not needed as not dynamically allocated memory lol
+            //free(node->specialization.integer_literal.value);
             break;
         default:
             //no additional specialized data to be freed

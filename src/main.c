@@ -7,25 +7,43 @@ int main (int argc, char *argv[]) {
     //get file contents with file reader
     char* file_contents = read_file("examples/main.tmt");
     
-    printf("%s", file_contents);
-    Lexer* my_lexer = init_lexer(file_contents);
-    List* tokens_list = init_list(50);
+    //display what is in main.tmt
+    printf("%s\n\n", file_contents);
 
-    //tokenize
+    //create the lexer and ready the tokens list
+    Lexer* my_lexer = init_lexer(file_contents);
+    List* tokens_list = init_list(30);
+
+    //tokenize the contents
     Token* token = (void*)0;
     while((token = tokenize_next(my_lexer)) != NULL) {
         printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
-        //add to list
+        //add to the list of tokens
         list_add(tokens_list, token);
     }
+
+    //free the lexer, it has done its job
     free_lexer(my_lexer);
     printf("\n");
 
-    //test out tokens list
-    printf("%s\n", token_type_str(tokens_list->array[20]));
-    Token* tok = (Token*)tokens_list->array[20];
-    printf("%s\n", tok->value);
+    //add the end of file token to the list
+    Token* end_of_file_token = init_token(TOKEN_EOF, NULL);
+    list_add(tokens_list, end_of_file_token);
 
+    //STEP 2: bring out the parser
+    Parser* my_parser = init_parser(tokens_list);
+
+    
+
+
+    //parse?
+    parser_parse(my_parser);
+
+    //write from root now
+    print_ast(my_parser->root, 0);
+
+
+    /*
     //test out ast nodes and lists together
     ASTNode* main_node = init_node(AST_PROGRAM);
     //create 2 variable declaration children nodes
@@ -49,6 +67,8 @@ int main (int argc, char *argv[]) {
     free_node(main_node);
     //free the tokens list
     free_complex_list(tokens_list, free_token_wrapper);
+    */
+    
     
     return 0;
 }

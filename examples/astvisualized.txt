@@ -2,28 +2,28 @@ AST for main.tmt should look like:
 
 NODE: AST_PROGRAM
     NODE: AST_VARIABLE_DECLARATION
-        variable_type = "int"
-        variable_name = "myVar"
-        assignment = 
-            NODE: AST_BINARY_OP
-                left = 
-                    NODE: AST_INTEGER
-                        value = 2
-                right = 
-                    NODE: AST_INTEGER
-                        value = 4
-                operand = '+'
+    variable_type = "int"
+    variable_name = "myVar"
+    assignment = 
+        NODE: AST_BINARY_OP
+        left = 
+            NODE: AST_INTEGER
+            value = 2
+        right = 
+            NODE: AST_INTEGER
+            value = 4
+        operand = '+'
     NODE: AST_VARIABLE_DECLARATION
-        variable_type = "int"
-        variable_name = "myOtherVar"
-        assignment = 
-            NODE: AST_BINARY_OP
-                left = 
-                    NODE: AST_INTEGER
-                        value = 10
-                right = 
-                    NODE: AST_INTEGER
-                        value = 2
-                operand = '*'
+    variable_type = "int"
+    variable_name = "myOtherVar"
+    assignment = 
+        NODE: AST_BINARY_OP
+        left = 
+            NODE: AST_INTEGER
+            value = 10
+        right = 
+            NODE: AST_INTEGER
+            value = 2
+        operand = '*'
 
 
