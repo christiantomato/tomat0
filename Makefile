@@ -1,13 +1,14 @@
-#the executable (.out extension is convention for binary files)
+#the binary executable the make file is creating
 exec = tomat0.out
-#listing our sources (in the source folder with extension .c)
+#listing our sources (all C files in src folder)
 sources = $(wildcard src/*.c)
-#object files created by compiler, linked together to create exectuable
+#object files created by compiler, linked together to create the exectuable
 objects = $(sources: .c = .o)
+
 #for debugging, using asan for memory problems
 flags = -g -fsanitize=address
 
-#how to create the exectuable
+#instructions on how to create the exectuable
 $(exec): $(objects)
 	gcc $(objects) $(flags) -o $(exec)
 
