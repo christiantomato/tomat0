@@ -36,7 +36,7 @@ void lexer_advance(Lexer* lexer) {
     if(lexer->curr != '\0' && lexer->index < strlen(lexer->contents)) {
         //increment the index
         lexer->index++;
-        //move to the next character
+        //move to the next character in the contents
         lexer->curr = lexer->contents[lexer->index];
     }
 }
@@ -57,30 +57,40 @@ void lexer_skip_whitespace(Lexer* lexer) {
     }
 }
 
-//critical method that will classify tokens
+/*
+Tokenize Next Function
+
+the main function that is responsible for deciding which type of token
+we are going to get, based on the first character
+
+ex.
+"hello world" (beginning with the quotation immediately indicates a string)
+69000 (begininning with a numeric character immediately indicates an integer)
+myVariable (beginning with an alphabetical character immediately indicates an identifier (keyword or name))
++ (single characters are easy to tokenize)
+*notice the restrictions this makes, like variable names not being able to start with numbers*
+
+Lexer* lexer: the lexer that is tokenizing
+
+return: the created token pointer
+*/
+
 Token* tokenize_next(Lexer* lexer) {
-    //while we are not on null character and are still within contents
+    //while we are not on the null terminating character and are still within the contents
     while(lexer->curr != '\0' && lexer->index < strlen(lexer->contents)) {
-        //first skip any whitespace
         lexer_skip_whitespace(lexer);
 
-        //check for number first (variables cannot start with numbers in tomat0)
         if(isdigit(lexer->curr)) {
-            //tokenize the entire number
             return tokenize_number(lexer);
         }
-        //for variables, keywords
+
         if(isalpha(lexer->curr)) {
-            //tokenize the variable/keyword
             return tokenize_ID(lexer);
         }
         
-        //use a switch paired with the token type enum
         switch(lexer->curr) {
-            case '"':
-                //since we have a quotation, we need to tokenize the string following it
-                return tokenize_string(lexer); break;
-            //all other easy punctuations
+            case '"': return tokenize_string(lexer); break;
+            //singular characters
             case '\n': return continue_with_token(lexer, init_token(TOKEN_NEWLINE, lexer_char_as_str(lexer))); break;
             case '=': return continue_with_token(lexer, init_token(TOKEN_EQUALS, lexer_char_as_str(lexer))); break;
             case ';': return continue_with_token(lexer, init_token(TOKEN_SEMI, lexer_char_as_str(lexer))); break;
@@ -99,106 +109,141 @@ Token* tokenize_next(Lexer* lexer) {
     return NULL;
 }
 
-//method for how we will tokenize strings
+/*
+Tokenize String Function
+
+responsible for obtaining the value of the string once it has been 
+recognized that a string is needed to be tokenized, continuing 
+through the characters until the closing quotation has been reached
+
+Lexer* lexer: the lexer that is tokenizing the string
+
+return: the token pointer of type TOKEN_STRING
+*/
+
 Token* tokenize_string(Lexer* lexer) {
     //skip the initial quotation
     lexer_advance(lexer);
     //allocate memory for the string we will be returning
-    char* strValue = malloc(sizeof(char));
+    char* str_value = malloc(sizeof(char));
     //make sure no garbage values, set null character
-    strValue[0] = '\0';
+    str_value[0] = '\0';
     //build the string as long as we have not reached next quotation
     while(lexer->curr != '"') {
-        //create a temp char that will store the current char as a string, so we can concat it later
+        //obtain the current lexer character as a string, and start building the entire string one character at a time
         char* temp = lexer_char_as_str(lexer);
-        //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
-        strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
-        //concatenate it
-        strcat(strValue, temp);
-        //free temp as its no longer needed
+        //reallocate memory as needed (+1 for the newly added character, and +1 for the null terminator which isn't counted)
+        str_value = realloc(str_value, (strlen(str_value) + 2) * sizeof(char));
+        //concatenate it to our string
+        strcat(str_value, temp);
+        //free the temporary character as it has been concatenated and is not needed
         free(temp);
-        //advance to next
+        //advance to next character in sequence
         lexer_advance(lexer);
     }
     //ignore closing quote
     lexer_advance(lexer);
-    //once finisished, return string as token
-    return init_token(TOKEN_STRING, strValue);
+    return init_token(TOKEN_STRING, str_value);
 }
 
-//method to tokenize identifiers (and keywords)
+/*
+Tokenize Identifier Function
+
+responsible for obtaining the value of the identifier,
+which could be a keyword, variable name, or function name
+continues to build the value as long as the identifier is alphabetical,
+therefore tomat0 does not allow snake_case or numbers in naming
+uses the same string building process as tokenize_string()
+
+Lexer* lexer: the lexer that is tokenizing the identifier
+
+return: the token pointer of type TOKEN_ID or TOKEN_KEYWORD
+*/
+
 Token* tokenize_ID(Lexer* lexer) {
-    //allocate memory for the string we will be returning
-    char* strValue = malloc(sizeof(char));
-    //make sure no garbage values, set null character
-    strValue[0] = '\0';
-    //build the string as long as our ID is alpha numeric (therefore variable names are only alphanumeric!!!)
-    while(isalnum(lexer->curr)) {
-        //create a temp char that will store the current char as a string, so we can concat it later
+    char* id_value = malloc(sizeof(char));
+    id_value[0] = '\0';
+    //build the string as long as our identifier is alphabetical 
+    while(isalpha(lexer->curr)) {
         char* temp = lexer_char_as_str(lexer);
-        //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
-        strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
-        //concatenate it
-        strcat(strValue, temp);
-        //free temp as its no longer needed
+        id_value = realloc(id_value, (strlen(id_value) + 2) * sizeof(char));
+        strcat(id_value, temp);
         free(temp);
-        //advance to next character
         lexer_advance(lexer);
     }
 
-    //check if it is a keyword
-    if(strcmp(strValue, "int") == 0) {
-        //integer declaration keyword
-        return init_token(TOKEN_KEYWORD_INT, strValue);
+    //checks if our identifier is a keyword
+    if(strcmp(id_value, "int") == 0) {
+        return init_token(TOKEN_KEYWORD_INT, id_value);
     }
-    else if(strcmp(strValue, "string") == 0) {
-        //string declaration keyword
-        return init_token(TOKEN_KEYWORD_STRING, strValue);
+    else if(strcmp(id_value, "string") == 0) {
+        return init_token(TOKEN_KEYWORD_STRING, id_value);
     }
-    else if(strcmp(strValue, "sout") == 0) {
-        //print statement keyword
-        return init_token(TOKEN_KEYWORD_SOUT, strValue);
+    else if(strcmp(id_value, "sout") == 0) {
+        return init_token(TOKEN_KEYWORD_SOUT, id_value);
     }
     else {
         //return as a regular identifier (for function or variable names)
-        return init_token(TOKEN_ID, strValue);
+        return init_token(TOKEN_ID, id_value);
     }
 }
 
-//method to tokenize numbers
+/*
+Tokenize Number Function
+
+creates a number token for any numeric characters, storing the number as a string
+
+Lexer* lexer: the lexer tokenizing the numbers
+
+return: the token pointer of type TOKEN_NUM
+*/
+
 Token* tokenize_number(Lexer* lexer) {
-    //allocate memory for the string we will be returning
     char* strValue = malloc(sizeof(char));
-    //make sure no garbage values, set null character
     strValue[0] = '\0';
     //build the string as long as we are still on a number
     while(isdigit(lexer->curr)) {
-        //create a temp char that will store the current char as a string, so we can concat it later
         char* temp = lexer_char_as_str(lexer);
-        //reallocating memory as needed, since adding the next char (+2 for new char and null terminator which isn't counted)
         strValue = realloc(strValue, (strlen(strValue) + 2) * sizeof(char));
-        //concatenate it
         strcat(strValue, temp);
-        //free temp as its no longer needed
         free(temp);
-        //advance to next character
         lexer_advance(lexer);
     }
-    //once finisished, return string as token
     return init_token(TOKEN_NUM, strValue);
 }
 
-//just advance the lexer, and return the token we just tokenized
+/*
+Continue With Token Function
+
+helper function to cleanly return back the token inputted, 
+and advance the lexer to be ready for the next tokenization
+
+Lexer* lexer: the lexer that will advance
+Token* token: the token that will be returned
+
+return: the inputted token pointer
+*/
+
 Token* continue_with_token(Lexer* lexer, Token* token) {
     //advance with the token
     lexer_advance(lexer);
     return token;
 }
 
-//method to get the current char as a char[]
+/*
+Lexer Character As String Function
+
+helper function to get the current lexer characater as a string pointer
+
+Lexer* lexer: the lexer whose character we are requesting
+
+return: the current character as a string pointer
+*/
+
 char* lexer_char_as_str(Lexer* lexer) {
-    //special case for new line
+    //special case for a newline character
     if(lexer->curr == '\n') {
+        //return it in the form "\n"
         return strdup("\\n");
     }
     //lexer->c is char, we need to make it a proper null terminated string
@@ -206,20 +251,27 @@ char* lexer_char_as_str(Lexer* lexer) {
     //build the null terminated string
     char_as_str[0] = lexer->curr;
     char_as_str[1] = '\0';
-    //return the char as a string
     return char_as_str;
 }
 
-//free all the memory that is being used by the lexer
+/*
+Free Lexer Function
+
+frees all memory allocated my the lexer struct
+
+Lexer* lexer: the lexer to be freed
+
+return: 0 for success, 1 for failure
+*/
+
 int free_lexer(Lexer* lexer) {
+    //ensure the lexer isn't garbage
     if(lexer == NULL) {
-        //bad return 1
         return 1;
     }
-    //free the contents
+    //free the pointer to the contents
     free(lexer->contents);
-    //free the lexer
+    //free the lexer itself
     free(lexer);
-    //return 0 for success
     return 0;
 }
