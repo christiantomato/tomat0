@@ -1,40 +1,49 @@
-//file containing definition and declarations of the lexer structure
+/*
+Lexer Struct
+
+responsible for conducting lexical analysis
+the lexer will traverse through the contents of the .tmt file and "tokenize" the contents,
+acting as the first step in breaking up our contents into meaningful units
+ex.
+int x = 10
+tokenized:
+TOKEN_KEYWORD_INT, TOKEN_ID, TOKEN_EQUALS, TOKEN_NUM
+
+char* contents: the actual contents we are performing lexical analysis on
+unsigned int index: the index of the string contents, acting as the cursor throughout the file
+char c: the current character the lexer is on in the file contents
+*/
 
 #include "token.h"
+
 #ifndef LEXER_H
 #define LEXER_H
 
-//struct to store current state of lexer
 typedef struct lexer_struct {
-    //current char
-    char c;
-    //index, acting as the cursor through contents
-    unsigned int i;
-    //the code we are going to do lexical analysis on
     char* contents;
-} lexer;
+    unsigned int index;
+    char curr;
+} Lexer;
 
-//methods
-
-//lexer initializor
-lexer* init_lexer(char* contents);
-//move to the next character
-void advance(lexer* lexer);
-//to skip whitespace
-void skip_whitespace(lexer* lexer);
+//creates a lexer
+Lexer* init_lexer(char* contents);
+//moves to next character
+void lexer_advance(Lexer* lexer);
+//skips unnecessary whitespace
+void lexer_skip_whitespace(Lexer* lexer);
 //to get the next token
-token* tokenize_next(lexer* lexer);
-//method for how we will tokenize strings
-token* tokenize_string(lexer* lexer); 
-//method to tokenize words, like variables and keywords (but not strings!)
-token* tokenize_ID(lexer* lexer);
-//method to tokenize numbers
-token* tokenize_number(lexer* lexer);
-//continuing on a token (just advancing the lexer and returning our token to prepare for next tokenization)
-token* continue_with_token(lexer* lexer, token* token);
-//method to get the current lexer char as a string
-char* lexer_char_as_string(lexer* lexer);
-//final method to free memory from the lexer! (this is good practice)
-void free_lexer(lexer* lexer);
+Token* tokenize_next(Lexer* lexer);
+//tokenizes a string
+Token* tokenize_string(Lexer* lexer); 
+//tokenizes words, like variables and keywords (different from strings)
+Token* tokenize_ID(Lexer* lexer);
+//to tokenize numbers 
+Token* tokenize_number(Lexer* lexer);
+//advance and prepare for next tokenization
+Token* continue_with_token(Lexer* lexer, Token* token);
+//to get the current character of the lexer
+char* lexer_char_as_str(Lexer* lexer);
+//frees allocated lexer memory
+int free_lexer(Lexer* lexer);
 
 #endif

@@ -3,42 +3,43 @@
 #include <stdlib.h>
 
 int main (int argc, char *argv[]) {
-    //lets read from the tomat0 file
-    char* file_contents;
-    FILE* tomat0_file; 
-    tomat0_file = fopen("/Users/christiantamayo/VSCodeProjects/tomat0/examples/main.tmt", "r");
-    if(tomat0_file == NULL) {
-        //error
-        printf("error opening file\n");
-    }
 
-    //determine file size
+    //get file contents with file reader
+    char* file_contents = read_file("example.tmt");
+    
+    //display what is in main.tmt
+    printf("%s\n\n", file_contents);
 
-    //go to end
-    fseek(tomat0_file, 0, SEEK_END);
-    //get pointer location
-    long file_size = ftell(tomat0_file);
-    //put pointer in tomat0 file back to beginning
-    rewind(tomat0_file);
+    //create the lexer and ready the tokens list
+    Lexer* my_lexer = init_lexer(file_contents);
+    List* tokens_list = init_list(30);
 
-    //allocate the appropriate memory for fileContents (+1 since we have to add the null termination for string)
-    file_contents = malloc(file_size + 1);
-    fread(file_contents, sizeof(char), file_size, tomat0_file);
-    //null terminate the string
-    file_contents[file_size] = '\0';
-
-    //tokenize with lexer
-    printf("%s", file_contents);
-    lexer* my_lexer = init_lexer(file_contents);
-    token* token = (void*)0;
+    //tokenize the contents
+    Token* token = (void*)0;
     while((token = tokenize_next(my_lexer)) != NULL) {
-        printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
-        //free the token as it is not needed anymore
-        free(token);
+        printf("Token type: %s, Token value: %s \n", token_type_as_str(token), token->value);
+        //add to the list of tokens
+        list_add(tokens_list, token);
     }
 
-    fclose(tomat0_file);
-    free(file_contents);
-    free(my_lexer);
+    //free the lexer, it has done its job
+    free_lexer(my_lexer);
+    printf("\n");
+
+    //add the end of file token to the list
+    Token* end_of_file_token = init_token(TOKEN_EOF, NULL);
+    list_add(tokens_list, end_of_file_token);
+
+    //STEP 2: bring out the parser
+    Parser* my_parser = init_parser(tokens_list);
+
+    //parse everything
+    parser_parse(my_parser);
+
+    //write from root now
+    FILE* ast_file = fopen("ast_output.txt", "w");
+    print_ast(ast_file, my_parser->root, 0);
+    
+    //success
     return 0;
 }

@@ -1,13 +1,14 @@
-#the executable (.out extension is convention for binary files)
+#the binary executable the make file is creating
 exec = tomat0.out
-#listing our sources (in the source folder with extension .c)
+#listing our sources (all C files in src folder)
 sources = $(wildcard src/*.c)
-#object files created by compiler, linked together to create exectuable
+#object files created by compiler, linked together to create the exectuable
 objects = $(sources: .c = .o)
-#for debugging, commented out for now because the dysm file is making me go insane and we don't need it right now
-#flags = -g
 
-#how to create the exectuable
+#for debugging, using asan for memory problems
+flags = -g -fsanitize=address
+
+#instructions on how to create the exectuable
 $(exec): $(objects)
 	gcc $(objects) $(flags) -o $(exec)
 
@@ -22,7 +23,7 @@ install:
 	make
 	cp ./tomat0.out /usr/local/bin/tomat0
 
-#clean command to recompile (remove .out ext and object files and dysm because again it makes me go insane)
+#clean command to recompile and remove executables and created files
 clean:
 	-rm *.out
 	-rm *.o 

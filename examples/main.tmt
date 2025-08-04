@@ -1,7 +1,0 @@
--this is our current compilation goal (this is a one line comment)
--we want to be able to compile the following:
-
-int var1 = 21;
-int var2 = 48;
-sout(var1 + var2);
-
