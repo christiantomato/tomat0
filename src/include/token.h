@@ -1,15 +1,15 @@
 /*
 Token Struct
 
-defines the different types of tokens that our lexer will encounter,
+defines the different types of tokens that our lexer will encounter
 these include:
 - numbers (ex. 123)
 - strings (ex. "hello world")
 - keywords (ex. sout, int, if, while)
 - punctuation/symbols (ex. (), >, =, +)
 
-type: the type of token (integer, symbol, keyword)
-value: the actual value the token holds (5, +, sout)
+TokenType type: the type of token (integer, symbol, keyword)
+char* value: the actual value the token holds (5, +, sout)
 */
 
 #ifndef TOKEN_H
@@ -48,7 +48,7 @@ Token* init_token(TokenType type, char* value);
 char* token_type_str(Token* token);
 //for freeing the memory of a token
 int free_token(Token* token);
-//wrapper function so we can free tokens stored in a built in array list
+//wrapper function so we can free tokens stored in a built-in array list
 void free_token_wrapper(void* token);
 
 #endif
