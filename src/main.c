@@ -17,7 +17,7 @@ int main (int argc, char *argv[]) {
     //tokenize the contents
     Token* token = (void*)0;
     while((token = tokenize_next(my_lexer)) != NULL) {
-        printf("Token type: %s, Token value: %s \n", token_type_str(token), token->value);
+        printf("Token type: %s, Token value: %s \n", token_type_as_str(token), token->value);
         //add to the list of tokens
         list_add(tokens_list, token);
     }

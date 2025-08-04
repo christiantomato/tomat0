@@ -31,7 +31,7 @@ Token* token: the target token for which we are finding the type
 return: returns the token type, as a string pointer
 */
 
-char* token_type_str(Token* token) {
+char* token_type_as_str(Token* token) {
     switch(token->type) {
         case TOKEN_KEYWORD_INT: return "TOKEN_KEYWORD_INT"; break;
         case TOKEN_KEYWORD_STRING: return "TOKEN_KEYWORD_STRING"; break;
