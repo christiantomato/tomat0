@@ -1,21 +1,37 @@
-//implement the token
 #include "include/token.h"
 #include <stdlib.h>
 
-//token initializor
+/*
+Initialize Token Function
+
+creates a token with the given type and value
+
+TokenType type: the type of token it will be classified as
+char* value: the value the token will hold
+
+return: returns the created token pointer
+*/
+
 Token* init_token(TokenType type, char* value) {
     //allocate space for the token
     Token* token = malloc(sizeof(Token));
-    //set the values to what we passed in
+    //initialize and return
     token->type = type;
     token->value = value;
-    //return created token
     return token;  
 }
 
-//get the token type as a string
+/*
+Token Type As String Function
+
+converts the token type enum into a string
+
+Token* token: the target token for which we are finding the type
+
+return: returns the token type, as a string pointer
+*/
+
 char* token_type_str(Token* token) {
-    //switch on the token type
     switch(token->type) {
         case TOKEN_KEYWORD_INT: return "TOKEN_KEYWORD_INT"; break;
         case TOKEN_KEYWORD_STRING: return "TOKEN_KEYWORD_STRING"; break;
@@ -36,24 +52,41 @@ char* token_type_str(Token* token) {
         case TOKEN_HYPHEN: return "TOKEN_HYPHEN"; break;
         case TOKEN_ASTERIK: return "TOKEN_ASTERIK"; break;
         case TOKEN_EOF: return "TOKEN_EOF"; break;
+        default: return "TOKEN_UNKNOWN"; break;
     }
 }
 
-//free memory
+/*
+Free Token Function
+
+frees all allocated memory of a token struct
+
+Token* token: the token pointer to be freed
+
+return: returns 0 for success, 1 if failure
+*/
+
 int free_token(Token* token) {
+    //ensure the token isn't garbage
     if(token == NULL) {
-        //failure
         return 1;
     }
-    //free token value
+    //free the pointer to the value of the token
     free(token->value);
-    //then free token
+    //free the token itself
     free(token);
-    //success
     return 0;
 }
 
-//wrapper for free token
+/*
+Free Token Wrapper Function
+
+a wrapper function for the free token function, utilized with my built-in array list 
+to ensure i can free a list of tokens properly
+
+void* token: the token to be freed
+*/
+
 void free_token_wrapper(void* token) {
     free_token((Token*) token);
 }

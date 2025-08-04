@@ -1,17 +1,20 @@
-//define our tokens that our lexer will use
 /*
-- numbers
-- symbols 
-- strings
-- operators 
-- punctuation
-etc.
+Token Struct
+
+defines the different types of tokens that our lexer will encounter,
+these include:
+- numbers (ex. 123)
+- strings (ex. "hello world")
+- keywords (ex. sout, int, if, while)
+- punctuation/symbols (ex. (), >, =, +)
+
+type: the type of token (integer, symbol, keyword)
+value: the actual value the token holds (5, +, sout)
 */
 
 #ifndef TOKEN_H
 #define TOKEN_H
 
-//enum for the types of tokens we will be classifying
 typedef enum token_type {
     TOKEN_KEYWORD_INT,
     TOKEN_KEYWORD_STRING,
@@ -34,21 +37,18 @@ typedef enum token_type {
     TOKEN_EOF
 } TokenType;
 
-//tokens will be of the form (type, value)
 typedef struct token_struct {
-    //token type from enum
     TokenType type;
-    //the value the token holds
     char* value;
 } Token; 
 
-//declare the initializer for the token
+//for creating tokens
 Token* init_token(TokenType type, char* value);
-//method to get the token type enum name
+//returning the enum name for the type of token as a string
 char* token_type_str(Token* token);
-//method to free memory from tokens (good practice)
+//for freeing the memory of a token
 int free_token(Token* token);
-//wrapper for free token so we can free tokens from out parser tokens list
+//wrapper function so we can free tokens stored in a built in array list
 void free_token_wrapper(void* token);
 
 #endif
