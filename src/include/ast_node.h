@@ -22,6 +22,7 @@ typedef enum ast_node_type {
     AST_NEGATION,
     AST_VARIABLE,
     AST_INTEGER,
+    AST_STRING
 } NodeType;
 
 //forward declare our AST node structure
@@ -57,6 +58,10 @@ typedef struct ast_integer {
     int value;
 } IntegerLiteral;
 
+typedef struct ast_string {
+    char* value;
+} StringLiteral;
+
 //unionize all the different node types
 typedef union ast_node_specializations {
     VariableDeclaration variable_declaration;
@@ -65,6 +70,7 @@ typedef union ast_node_specializations {
     Negation negation;
     Variable variable;
     IntegerLiteral integer_literal;
+    StringLiteral string_literal;
 } ASTSpecialization;
 
 //fully declare the ast node - each node will be of the form (type, children[], node specialization (arguments, properties, etc.))
@@ -82,7 +88,7 @@ ASTNode* init_node(NodeType type);
 //get the node type enum name
 char* node_type_str(ASTNode* node);
 //write to file the tree representation from any node
-void print_ast(ASTNode* root, int indent);
+void print_ast(FILE* file, ASTNode* root, int indent);
 //helper method for indentation
 void print_indent(FILE* file, int indent);
 //free memory of a node

@@ -30,8 +30,12 @@ ASTNode* init_node(NodeType type) {
         case AST_VARIABLE:
             node->specialization.variable.variable_name = NULL;
             node->specialization.variable.value = NULL;
+            break;
         case AST_INTEGER:
             node->specialization.integer_literal.value = 0;
+            break;
+        case AST_STRING:
+            node->specialization.string_literal.value = "\0";
             break;
         default:
             //specialization not needed (ex. AST_PROGRAM)
@@ -52,19 +56,17 @@ char* node_type_str(ASTNode* node) {
         case AST_NEGATION: return "AST_NEGATION"; break;
         case AST_VARIABLE: return "AST_VARIABLE"; break;
         case AST_INTEGER: return "AST_INTEGER"; break;
+        case AST_STRING: return "AST_STRING"; break;
     }
 }
 
 //writes the ast to a file
-void print_ast(ASTNode* root, int indent) {
-    //create a new file and open it in write mode
-    FILE* ast_file = fopen("ast_output.txt", "w");
-
+void print_ast(FILE* file, ASTNode* root, int indent) {
     //print the indentation
-    print_indent(ast_file, indent);
+    print_indent(file, indent);
 
     //always start with node title
-    fprintf(ast_file, "NODE: %s\n", node_type_str(root));
+    fprintf(file, "NODE: %s\n", node_type_str(root));
 
     //switch on the node type
     switch(root->type) {
@@ -73,50 +75,66 @@ void print_ast(ASTNode* root, int indent) {
             //iterate through the children statements and write them to file
             for(int i = 0; i < root->children->num_items; i++) {
                 //(indent always 1)
-                print_ast(root->children->array[i], 1);
+                print_ast(file, root->children->array[i], 1);
             }
             break;
             
         case AST_VARIABLE_DECLARATION:
-            //list out the relevant information
-            fprintf(ast_file, "data_type = %s\n", root->specialization.variable_declaration.variable_type);
-            fprintf(ast_file, "variable_name = %s\n", root->specialization.variable_declaration.variable_name);
+            //list out the relevant information, remembering to indent our information
+            print_indent(file, indent);
+            fprintf(file, "data_type = %s\n", root->specialization.variable_declaration.variable_type);
+            print_indent(file, indent);
+            fprintf(file, "variable_name = %s\n", root->specialization.variable_declaration.variable_name);
             //assignment is also a node, so recurse into that
-            fprintf(ast_file, "assignment = \n");
-            print_ast(root->specialization.variable_declaration.assignment, indent + 1);
+            print_indent(file, indent);
+            fprintf(file, "assignment = \n");
+            print_ast(file, root->specialization.variable_declaration.assignment, indent + 1);
             break;
 
         case AST_PRINT_STATEMENT:
             //list parameters
-            fprintf(ast_file, "output = \n");
+            print_indent(file, indent);
+            fprintf(file, "output = \n");
             //output is a node, recurse
-            print_ast(root->specialization.print_statement.statement, indent + 1);
+            print_ast(file, root->specialization.print_statement.statement, indent + 1);
             break;
 
         case AST_BINARY_OPERATION:
             //left node
-            fprintf(ast_file, "left = \n");
-            print_ast(root->specialization.binary_operation.left, indent + 1);
+            print_indent(file, indent);
+            fprintf(file, "left = \n");
+            print_ast(file, root->specialization.binary_operation.left, indent + 1);
             //right node
-            fprintf(ast_file, "right = \n");
-            print_ast(root->specialization.binary_operation.right, indent + 1);
+            print_indent(file, indent);
+            fprintf(file, "right = \n");
+            print_ast(file, root->specialization.binary_operation.right, indent + 1);
             //operand
-            fprintf(ast_file, "operand = %s\n", root->specialization.binary_operation.operand);
+            print_indent(file, indent);
+            fprintf(file, "operand = %s\n", root->specialization.binary_operation.operand);
             break;
 
         case AST_NEGATION:
-            fprintf(ast_file, "negate (-) = \n");
-            print_ast(root->specialization.negation.factor, indent + 1);
+            print_indent(file, indent);
+            fprintf(file, "negate (-) = \n");
+            print_ast(file, root->specialization.negation.factor, indent + 1);
             break;
 
         case AST_VARIABLE:
-            fprintf(ast_file, "variable_name = %s\n", root->specialization.variable.variable_name);
-            fprintf(ast_file, "value = \n");
-            print_ast(root->specialization.variable.value, indent + 1);
+            print_indent(file, indent);
+            fprintf(file, "variable_name = %s\n", root->specialization.variable.variable_name);
+            print_indent(file, indent);
+            fprintf(file, "value = UNRESOLVED\n");
+            //print_ast(file, root->specialization.variable.value, indent + 1);
             break;
 
         case AST_INTEGER:
-            fprintf(ast_file, "value = %d\n", root->specialization.integer_literal.value);
+            print_indent(file, indent);
+            fprintf(file, "value = %d\n", root->specialization.integer_literal.value);
+            break;
+
+        case AST_STRING:
+            print_indent(file, indent);
+            fprintf(file, "value = '%s'\n", root->specialization.string_literal.value);
             break;
     }
 }

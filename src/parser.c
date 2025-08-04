@@ -140,6 +140,9 @@ ASTNode* parse_print_statement(Parser* parser) {
     //create the node we will return
     ASTNode* print_node = init_node(AST_PRINT_STATEMENT);
 
+    //move past the keyword (sout)
+    parser_advance(parser);
+
     //expect and eat the LPAREN
     if(parser->current_token->type == TOKEN_LPAREN) {
         //expected, EAT
@@ -277,7 +280,7 @@ ASTNode* parse_factor(Parser* parser) {
     if(parser->current_token->type == TOKEN_ID) {
         //create the AST_VARIABLE
         ASTNode* variable_node = init_node(AST_VARIABLE);
-        //set the name
+        //set the name, remember in parsing value is not resolved yet so we leave that be
         variable_node->specialization.variable.variable_name = parser->current_token->value;
         //advance past
         parser_advance(parser);
@@ -295,6 +298,18 @@ ASTNode* parse_factor(Parser* parser) {
         parser_advance(parser);
         //return the node
         return integer_node;
+    }
+
+    //check for string literal
+    if(parser->current_token->type == TOKEN_STRING) {
+        //create an AST_STRING
+        ASTNode* string_node = init_node(AST_STRING);
+        //assign
+        string_node->specialization.string_literal.value = parser->current_token->value;
+        //advance past
+        parser_advance(parser);
+        //return
+        return string_node;
     }
 
     //nothing expected, problem
