@@ -4,6 +4,7 @@ Lexer Struct
 responsible for conducting lexical analysis
 the lexer will traverse through the contents of the .tmt file and "tokenize" the contents,
 acting as the first step in breaking up our contents into meaningful units
+
 ex.
 int x = 10
 tokenized:
