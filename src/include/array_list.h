@@ -1,35 +1,40 @@
-//making a generic list in C, to help me store the children of the AST nodes (as they are of unknown size)
+/*
+Generic Array List Struct
+
+definition of my own array list, for any data type
+used so I can store things like tokens and ast nodes in an organized and efficient manner
+
+unsigned int num_items: the number of items in the list
+unsigned int current_capacity: the current capacity of items that the list can hold
+void** array: the pointer to the array, which is an array that holds pointers to data
+*/
+
 #include <stdbool.h>
 
 #ifndef ARR_LIST
 #define ARR_LIST
 
-typedef struct generic_array_list {
-    //number of items in list
+typedef struct generic_array_list_struct {
     unsigned int num_items;
-    //current capacity of the list
     unsigned int current_capacity;
-    //the array holding the data items (double pointer, as it holds pointers to data)
     void** array;
 } List;
 
-//methods we need to implement for the list structure
-
-//initializtion of the list
+//create a list
 List* init_list(unsigned int init_capacity);
-//adds data to the end of the list - use a void pointer, as we don't know the type of the data. 
+//add data to the end of list
 void list_add(List* list, void* data);
-//remove data at a specified index, and the list will shift over so there is no gaps
+//remove data at specified index
 void list_remove(List* list, unsigned int index, void (*free_func)(void*));
-//list helper method to expand capacity
+//helper to expand the array size
 void expand_capacity(List* list);
-//check for empty list
+//checks if empty
 bool is_empty(List* list);
-//check for max capacity
+//checks if full
 bool is_max_capacity(List* list);
-//free all memory used by the list for simple types
-int free_primitive_list(List* list);
-//free all memory in list storing complex data types, which require their own free function
+//free all data in list for simple data types 
+int free_primitive_list(List* list, bool free_deep);
+//free all memory in list storing complex data types
 int free_complex_list(List* list, void (*free_func)(void*));
 
 #endif
