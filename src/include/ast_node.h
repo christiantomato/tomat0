@@ -1,10 +1,10 @@
-//define nodes for the abstract syntax tree
 /*
-- Declarations
-- Function Calls
-- Keywords
-- Binary Operations
-- Literals
+AST Node Struct
+
+
+
+
+
 */
 
 #include "array_list.h"

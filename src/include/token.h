@@ -1,5 +1,5 @@
 /*
-Token Struct
+Token Structure
 
 defines the different types of tokens that our lexer will encounter
 these include:

@@ -1,5 +1,5 @@
 /*
-Generic Array List Struct
+Generic Array List Structure
 
 definition of my own array list, for any data type
 used so I can store things like tokens and ast nodes in an organized and efficient manner

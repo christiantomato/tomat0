@@ -1,5 +1,5 @@
 /*
-Lexer Struct
+Lexer Structure
 
 responsible for conducting lexical analysis
 the lexer will traverse through the contents of the .tmt file and "tokenize" the contents,
