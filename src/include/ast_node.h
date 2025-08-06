@@ -1,10 +1,16 @@
 /*
 AST Node Struct
 
+defines the different types of nodes that the abstract syntax tree will use
+these include:
+- variable declarations
+- print statements
+- binary operations
+- function calls
 
-
-
-
+NodeType type: the type of ast node it is
+List* children: children nodes (used for the program node statements, function node statements, and blocks of code)
+ASTSpecialization: a union containing structs for specialized ast nodes
 */
 
 #include "array_list.h"
@@ -13,7 +19,6 @@ AST Node Struct
 #ifndef AST_NODE
 #define AST_NODE
 
-//define the enum for all the different types of nodes that are possible in the syntax tree
 typedef enum ast_node_type {
     AST_PROGRAM,
     AST_VARIABLE_DECLARATION,
@@ -25,10 +30,13 @@ typedef enum ast_node_type {
     AST_STRING
 } NodeType;
 
-//forward declare our AST node structure
+//forward declare our ast node structure
 struct ast_node_struct;
 
-//define all the different type of ast nodes that have special properties and attributes
+/*
+define structs for all specialized ast nodes
+*/
+
 typedef struct ast_variable_declaration {
     char* variable_type;
     char* variable_name;
@@ -73,13 +81,10 @@ typedef union ast_node_specializations {
     StringLiteral string_literal;
 } ASTSpecialization;
 
-//fully declare the ast node - each node will be of the form (type, children[], node specialization (arguments, properties, etc.))
+//main ast node structure
 typedef struct ast_node_struct {
-    //type of node using enum
     NodeType type;
-    //list of children nodes
     List* children;
-    //utilizing the union, we can assign the correct data to the type of node
     ASTSpecialization specialization;
 } ASTNode;
 
@@ -93,7 +98,7 @@ void print_ast(FILE* file, ASTNode* root, int indent);
 void print_indent(FILE* file, int indent);
 //free memory of a node
 int free_node(ASTNode* node);
-//wrapper for free node, so we can pass it in to our free_complex_list for the children
+//wrapper for free node
 void free_node_wrapper(void* node);
 
 #endif
