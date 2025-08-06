@@ -1,9 +1,12 @@
-//header master file 
+/*
+Header Master File
+*/
+
 #ifndef ALL_H
 #define ALL_H
 
-#include "lexer.h"
 #include "token.h"
+#include "lexer.h"
 #include "array_list.h"
 #include "file_reader.h"
 #include "ast_node.h"
