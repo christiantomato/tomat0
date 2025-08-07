@@ -20,7 +20,7 @@ ASTNode* init_node(NodeType type) {
     //initialize values needed for each node specilization
     switch(type) {
         case AST_VARIABLE_DECLARATION:
-            node->specialization.variable_declaration.variable_type = NULL;
+            node->specialization.variable_declaration.data_type = NULL;
             node->specialization.variable_declaration.variable_name = NULL;
             node->specialization.variable_declaration.assignment = NULL;
             break;
@@ -103,7 +103,7 @@ void print_ast(FILE* file, ASTNode* root, int indent) {
         case AST_VARIABLE_DECLARATION:
             //list out the relevant information, remembering to indent our information before each print statement
             print_indent(file, indent);
-            fprintf(file, "data_type = %s\n", root->specialization.variable_declaration.variable_type);
+            fprintf(file, "data_type = %s\n", root->specialization.variable_declaration.data_type);
             print_indent(file, indent);
             fprintf(file, "variable_name = %s\n", root->specialization.variable_declaration.variable_name);
             //assignment is also a node, so recurse into that
@@ -186,7 +186,7 @@ int free_node(ASTNode* node) {
     //free any dynamically allocated memory needed for specialized nodes
     switch(node->type) {
         case AST_VARIABLE_DECLARATION:
-            free(node->specialization.variable_declaration.variable_type);
+            free(node->specialization.variable_declaration.data_type);
             free(node->specialization.variable_declaration.variable_name);
             free_node(node->specialization.variable_declaration.assignment);
             break;

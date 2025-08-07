@@ -38,7 +38,7 @@ define structs for all specialized ast nodes
 */
 
 typedef struct ast_variable_declaration {
-    char* variable_type;
+    char* data_type;
     char* variable_name;
     struct ast_node_struct* assignment;
 } VariableDeclaration;
