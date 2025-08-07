@@ -1,5 +1,5 @@
 /*
-AST Node Struct
+AST Node Structure
 
 defines the different types of nodes that the abstract syntax tree will use
 these include:
