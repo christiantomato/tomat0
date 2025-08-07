@@ -1,6 +1,16 @@
 #include "include/parser.h"
 #include <stdlib.h>
 
+/*
+Initialize Parser Function
+
+creates a parser and gives it the tokens to analyze
+
+List* tokens: the tokens the parser will resolve
+
+return: pointer to the parser
+*/
+
 Parser* init_parser(List* tokens) {
     //create a parser and allocate memory
     Parser* parser = malloc(sizeof(Parser));
@@ -15,41 +25,49 @@ Parser* init_parser(List* tokens) {
     return parser;
 }
 
-//parse each line and add it to the children of the program node of our parser
-void parser_parse(Parser* parser) {
-    //parse until we reach the end of file token
-    while(parser->current_token->type != TOKEN_EOF) {
-        //first skip everything that does not need to be parsed
-        parser_skip(parser);
-        //check again for end of file again after skipping
-        if(parser->current_token->type == TOKEN_EOF) {
-            //finished parsing
-            break;
-        }
-        //now we can parse lines and add to the children of the program node safely
-        list_add(parser->root->children, parse_line(parser));
-    }
-}
 
-//"consumes" the token it is on, and sets the new current token to the next in the list
+/*
+Parser Advance Function
+
+helper function to move to the next token in the tokens list
+
+Parser* parser: the parser that is advancing
+*/
+
 void parser_advance(Parser* parser) {
     parser->index++;
-    //update
+    //update current
     parser->current_token = parser->tokens->array[parser->index];
 }
 
-//look ahead to the next token, to help with parsing logic
+/*
+Parser Peek Function
+
+helper function to look ahead at the upcoming tokens, to help with parser logic
+
+Parser* parser: the parser which is looking ahead
+int ahead: how far ahead the parser is looking
+
+return: pointer to the token that is upcoming
+*/
+
 Token* parser_peek(Parser* parser, int ahead) {
-    //return the token at however many places ahead
     return parser->tokens->array[ahead];
 }
 
-//skip comments and blank lines
+/*
+Parser Skip Function
+
+helper function that skips through blank lines and comments, which do not need any logic to be parsed
+
+Parser* parser: the parser which is skipping
+*/
+
 void parser_skip(Parser* parser) {
     while(true) {
-        //if rchevron, skip the comment
+        //skip rchevron comments
         if(parser->current_token->type == TOKEN_RCHEVRON) {
-            //skip everything until we hit a newline or end token
+            //skip everything until we hit a newline (then check again for comments), or end token
             while(parser->current_token->type != TOKEN_NEWLINE && parser->current_token->type != TOKEN_EOF) {
                 parser_advance(parser);
             }
@@ -60,67 +78,107 @@ void parser_skip(Parser* parser) {
             parser_advance(parser);
         }
         else {
-            //once all the unneccesary stuff is skipped, exit
+            //once all the unneccesary stuff is skipped, exit the loop and start parsing the line
             break;
         }
     }
 }
 
-//parsing functions returning a node
+/*
+Parser Parse Function
 
-//parse the line (tomat0 is line by line, so this will simplify our life)
+the main parsing function which will build the abstract syntax tree to the root program node
+
+Parser* parser: the parser which is building the tree
+*/
+
+void parser_parse(Parser* parser) {
+    //parse until we reach the end of file token
+    while(parser->current_token->type != TOKEN_EOF) {
+        //first skip everything that does not need to be parsed
+        parser_skip(parser);
+        //check again for end of file again after skipping
+        if(parser->current_token->type == TOKEN_EOF) {
+            //finished parsing
+            break;
+        }
+        //now parse lines and add each parsed statement to the children of the program node 
+        list_add(parser->root->children, parse_line(parser));
+    }
+}
+
+/*
+Parse Line Function
+
+parser a singular line
+since tomat0 language does not allow for multiple statements per line, we can parse statements line by line
+
+Parser* parse: the parser that is parsing the line
+
+return: pointer to the created statement node (could be variable declaration, print statement, function call, etc.)
+*/
+
 ASTNode* parse_line(Parser* parser) {
     //go through each type of statement it could be 
     if(parser->current_token->type == TOKEN_KEYWORD_INT || parser->current_token->type == TOKEN_KEYWORD_STRING) {
-       //parsing a variable declaration
        return parse_variable_declaration(parser);
     }
     else if(parser->current_token->type == TOKEN_KEYWORD_SOUT) {
-        //parsing a print statement
         return parse_print_statement(parser);
     }
     else {
+        //invalid statement
         return NULL;
     }
 }
 
-//parse a variable declaration / assignment (declarations in tomat0 must have a value aswell)
+/*
+Parse Variable Declaration Function
+
+parses a variable declaration statement
+checks for varialble name, type, and value
+continues the recursive descent as the value is a node itself and could be a complicated expression
+
+Parser* parser: the parser that is parsing the variable declaration
+
+return: pointer to the created variable declaration node
+*/
+
 ASTNode* parse_variable_declaration(Parser* parser) {
     //create the node we will return
     ASTNode* var_dec_node = init_node(AST_VARIABLE_DECLARATION);
 
-    //first step is to determine the variable type
-
+    //determine the data type
     if(parser->current_token->type == TOKEN_KEYWORD_INT) {
-        //set the variable type to integer
-        var_dec_node->specialization.variable_declaration.variable_type = "int";
+        var_dec_node->specialization.variable_declaration.data_type = "int";
     }
     else if(parser->current_token->type == TOKEN_KEYWORD_STRING) {
-        //set the variable type to string
-        var_dec_node->specialization.variable_declaration.variable_type = "string";
+        var_dec_node->specialization.variable_declaration.data_type = "string";
+    }
+    else {
+        //no type? problem
+        return NULL;
     }
 
     //advance to the next token
     parser_advance(parser);
 
-    //second step is to expect/get the variable name
 
+    //expect a variable name
     if(parser->current_token->type == TOKEN_ID) {
-        //assign the variable name
         var_dec_node->specialization.variable_declaration.variable_name = parser->current_token->value;
     }
     else {
-        //problem
+        //problem in syntax
         return NULL;
     }
 
     //advance to next
     parser_advance(parser);
 
-    //third step is to expect an equals
 
+    //expect an equals for assignment
     if(parser->current_token->type == TOKEN_EQUALS) {
-        //this is expected, we can move on
         parser_advance(parser);
     }
     else {
@@ -128,14 +186,24 @@ ASTNode* parse_variable_declaration(Parser* parser) {
         return NULL;
     }
 
-    //last step is to get the value that is being assigned
+    //recurse down and parse the assignment value
     var_dec_node->specialization.variable_declaration.assignment = parse_expression(parser);
     
-    //return the node
+    //return the node once finished
     return var_dec_node;
 }
 
-//parse a print statement - sout(statement)
+/*
+Parse Print Statement Function
+
+parses a print statement
+recurses into whatever the print statement expression is
+
+Parser* parser: the parser that is parsing the print statement
+
+return: pointer to the print statement node
+*/
+
 ASTNode* parse_print_statement(Parser* parser) {
     //create the node we will return
     ASTNode* print_node = init_node(AST_PRINT_STATEMENT);
@@ -143,9 +211,8 @@ ASTNode* parse_print_statement(Parser* parser) {
     //move past the keyword (sout)
     parser_advance(parser);
 
-    //expect and eat the LPAREN
+    //expect an LPAREN
     if(parser->current_token->type == TOKEN_LPAREN) {
-        //expected, EAT
         parser_advance(parser);
     }
     else {
@@ -153,12 +220,11 @@ ASTNode* parse_print_statement(Parser* parser) {
         return NULL;
     }
 
-    //next we have to evaluate the statement inside the parens
+    //evaluate expression in parens
     print_node->specialization.print_statement.statement = parse_expression(parser);
 
-    //after that, ensure a closing paren
+    //ensure closing paren
     if(parser->current_token->type == TOKEN_RPAREN) {
-        //expected, CONSUME
         parser_advance(parser);
     }
     else {
@@ -166,21 +232,32 @@ ASTNode* parse_print_statement(Parser* parser) {
         return NULL; 
     }
 
-    //return the print statement node
+    //done print statement
     return print_node;
 }
 
 /*
-Grammar for our LL(1) Recursive Descent Parser
+Grammar for our LL(1) Recursive Descent Parser For Expressions, Terms, and Factors
 
 E -> T E'
 E' -> (+ -) T E' | epsilon
 T -> F T'
 T' -> (* /) F T' | epsilon
 F -> TOKEN_ID | Literal | (E) | -F
+
+this grammar helps us follow the correct rules for order of operations in arithmetic expressions
+we recurse down until we hit a terminal (factors) and represent complicated expressions as many nested binary operations
 */
 
-//build up the expression tree using the given grammar rules
+/*
+Parse Expression Function
+
+
+
+
+
+*/
+
 ASTNode* parse_expression(Parser* parser) {
     //parse the left term
     ASTNode* left = parse_term(parser);
