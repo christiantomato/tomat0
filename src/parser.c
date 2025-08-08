@@ -249,13 +249,18 @@ this grammar helps us follow the correct rules for order of operations in arithm
 we recurse down until we hit a terminal (factors) and represent complicated expressions as many nested binary operations
 */
 
+
+
 /*
 Parse Expression Function
 
+an expression is made up of any sequence of terms combined by + or - operators (the operators with lowest precedence)
+the while loop will continue building binary nodes as long as there are more additions or subtractions to be parsed
+this avoid left recursion and correctly builds left associativity
 
+Parser* parser: the parser that is parsing the expression
 
-
-
+return: pointer to the parsed expression node
 */
 
 ASTNode* parse_expression(Parser* parser) {

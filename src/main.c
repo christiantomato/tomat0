@@ -5,7 +5,7 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    char* file_contents = read_file("example.tmt");
+    char* file_contents = read_file("test.tmt");
     
     //display what is in main.tmt
     printf("%s\n\n", file_contents);

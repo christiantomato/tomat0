@@ -4,34 +4,4 @@ NODE: AST_PROGRAM
 	variable_name = x
 	assignment = 
 		NODE: AST_INTEGER
-		value = 0
-	NODE: AST_VARIABLE_DECLARATION
-	data_type = string
-	variable_name = y
-	assignment = 
-		NODE: AST_STRING
-		value = 'hello world'
-	NODE: AST_PRINT_STATEMENT
-	output = 
-		NODE: AST_BINARY_OPERATION
-		left = 
-			NODE: AST_BINARY_OPERATION
-			left = 
-				NODE: AST_INTEGER
-				value = 3
-			right = 
-				NODE: AST_BINARY_OPERATION
-				left = 
-					NODE: AST_INTEGER
-					value = 4
-				right = 
-					NODE: AST_INTEGER
-					value = 2
-				operand = -
-			operand = *
-		right = 
-			NODE: AST_NEGATION
-			negate (-) = 
-				NODE: AST_INTEGER
-				value = 1
-		operand = +
+		value = 5
