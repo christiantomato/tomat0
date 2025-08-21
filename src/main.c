@@ -5,7 +5,7 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    char* file_contents = read_file("test.tmt");
+    char* file_contents = read_file("example.tmt");
     
     //display what is in main.tmt
     printf("%s\n\n", file_contents);
@@ -30,7 +30,7 @@ int main (int argc, char *argv[]) {
     Token* end_of_file_token = init_token(TOKEN_EOF, NULL);
     list_add(tokens_list, end_of_file_token);
 
-    //STEP 2: bring out the parser
+    //bring out the parser
     Parser* my_parser = init_parser(tokens_list);
 
     //parse everything
@@ -39,6 +39,9 @@ int main (int argc, char *argv[]) {
     //write from root now
     FILE* ast_file = fopen("ast_output.txt", "w");
     print_ast(ast_file, my_parser->root, 0);
+
+    //free the parser, its job is done
+    free_parser(my_parser);
     
     //success
     return 0;

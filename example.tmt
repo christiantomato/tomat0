@@ -9,4 +9,4 @@ string y = "hello world"
 > a print statement of a complicated expression
 sout(3 * (4-2) + (-1))
 
-> all for now!
+> next step is converting to assembly (pain)

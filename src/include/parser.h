@@ -37,7 +37,7 @@ void parser_skip(Parser* parser);
 void parser_parse(Parser* parser);
 
 /*
-parsing methods (top down)
+parsing functions (top down parsing)
 */
 
 ASTNode* parse_line(Parser* parser);

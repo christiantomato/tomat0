@@ -186,7 +186,7 @@ int free_node(ASTNode* node) {
     //free any dynamically allocated memory needed for specialized nodes
     switch(node->type) {
         case AST_VARIABLE_DECLARATION:
-            free(node->specialization.variable_declaration.data_type);
+            //(dont free, it is a const char* which is read only): free(node->specialization.variable_declaration.data_type);
             free(node->specialization.variable_declaration.variable_name);
             free_node(node->specialization.variable_declaration.assignment);
             break;

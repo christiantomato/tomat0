@@ -1,5 +1,6 @@
 #include "include/parser.h"
 #include <stdlib.h>
+#include <string.h>
 
 /*
 Initialize Parser Function
@@ -166,7 +167,8 @@ ASTNode* parse_variable_declaration(Parser* parser) {
 
     //expect a variable name
     if(parser->current_token->type == TOKEN_ID) {
-        var_dec_node->specialization.variable_declaration.variable_name = parser->current_token->value;
+        //duplicate the token value (fixing double free errors)
+        var_dec_node->specialization.variable_declaration.variable_name = strdup(parser->current_token->value);
     }
     else {
         //problem in syntax
@@ -256,7 +258,7 @@ Parse Expression Function
 
 an expression is made up of any sequence of terms combined by + or - operators (the operators with lowest precedence)
 the while loop will continue building binary nodes as long as there are more additions or subtractions to be parsed
-this avoid left recursion and correctly builds left associativity
+this avoids left recursion and correctly builds the tree using left associativity
 
 Parser* parser: the parser that is parsing the expression
 
@@ -264,13 +266,13 @@ return: pointer to the parsed expression node
 */
 
 ASTNode* parse_expression(Parser* parser) {
-    //parse the left term
+    //parse the first term
     ASTNode* left = parse_term(parser);
 
-    //continue the loop as long as we are doing addition or subtraction to build up our tree
+    //continue the loop as long as we are doing addition or subtraction to build up our expression
     while(parser->current_token->type == TOKEN_PLUS || parser->current_token->type == TOKEN_HYPHEN) {
-        //get the operand
-        char* operand = parser->current_token->value;
+        //get the operand (strdup!)
+        char* operand = strdup(parser->current_token->value);
 
         //move past
         parser_advance(parser);
@@ -284,28 +286,35 @@ ASTNode* parse_expression(Parser* parser) {
         binary_op_node->specialization.binary_operation.operand = operand;
         binary_op_node->specialization.binary_operation.right = right;
 
-        //left is now this new node, building up the tree with correct associativity
+        //now the left node can become the sub binary node we just created, and allows us to continue building an expression with the next term in the while loop (if any)
         left = binary_op_node;
     }
 
-    //once done return left
+    //return the node that has built up the expression
     return left;
 }
 
-//same concept as expression, just different operand
+/*
+Parse Term Function
+
+terms are made up of any sequence of factors combined by * or / 
+the algorithm used here is the exact same as the one above, but deals with the operators with the next highest precedence
+we recurse into this function from the parse expression function, and then from here into parsing factors
+
+Parser* parser: the parser that is parsing the terms
+
+return: pointer to the parsed term node
+*/
+
 ASTNode* parse_term(Parser* parser) {
-    //parse the left term
+    //parse the factor
     ASTNode* left = parse_factor(parser);
 
-    //continue the loop as long as we are doing addition or subtraction to build up our tree
+    //continue the loop as long as we are multiplying or dividing to build up our tree
     while(parser->current_token->type == TOKEN_ASTERIK || parser->current_token->type == TOKEN_FSLASH) {
-        //get the operand
-        char* operand = parser->current_token->value;
-
-        //move past
+        //get operand and parse right term (strdup!)
+        char* operand = strdup(parser->current_token->value);
         parser_advance(parser);
-
-        //parse the right term
         ASTNode* right = parse_factor(parser);
 
         //create the binary operation node
@@ -314,23 +323,32 @@ ASTNode* parse_term(Parser* parser) {
         binary_op_node->specialization.binary_operation.operand = operand;
         binary_op_node->specialization.binary_operation.right = right;
 
-        //left is now this new node, building up the tree with correct associativity
+        //set left as the binary operation to keep building the nested binary operations
         left = binary_op_node;
     }
 
-    //once done return left
+    //return once no more terms to be parsed
     return left;
 }
 
-//Contains the terminals, just a bunch of if statements
-ASTNode* parse_factor(Parser* parser) {
+/*
+Parse Factor Function
 
+here you can find the base cases in the recursive algorithm, like integer or string literals
+we also find operations of the highest precedence here, like parenthesis or negations
+
+Parser* parser: the parser that is parsing the factor
+
+return: pointer to the parsed factor node
+*/
+
+ASTNode* parse_factor(Parser* parser) {
     //check for parenthesized expression
     if(parser->current_token->type == TOKEN_LPAREN) {
         //advance to the expression
         parser_advance(parser);
 
-        //parse the expression
+        //parse the expression inside parens
         ASTNode* expression_node = parse_expression(parser);
 
         //expect a closing parenthesis
@@ -386,8 +404,8 @@ ASTNode* parse_factor(Parser* parser) {
     if(parser->current_token->type == TOKEN_STRING) {
         //create an AST_STRING
         ASTNode* string_node = init_node(AST_STRING);
-        //assign
-        string_node->specialization.string_literal.value = parser->current_token->value;
+        //assign the string (make sure to duplicate)
+        string_node->specialization.string_literal.value = strdup(parser->current_token->value);
         //advance past
         parser_advance(parser);
         //return
@@ -398,5 +416,23 @@ ASTNode* parse_factor(Parser* parser) {
     return NULL;
 }
 
+/*
+frees all dynamically allocated memory by the parser
 
+Parser* parser: the parser being freed
 
+return: 0 for success, 1 for failure
+*/
+
+int free_parser(Parser* parser) {
+    //make sure parser isn't garbage
+    if(parser == NULL) {
+        return 1;
+    }
+    //free any dynamically allocated memory
+    free_node(parser->root);
+    free_complex_list(parser->tokens, free_token_wrapper);
+    //free parser itself
+    free(parser);
+    return 0;
+}
