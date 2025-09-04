@@ -5,7 +5,7 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    char* file_contents = read_file("example.tmt");
+    char* file_contents = read_file("assemblygoal.tmt");
     
     //display what is in main.tmt
     printf("%s\n\n", file_contents);
@@ -40,8 +40,15 @@ int main (int argc, char *argv[]) {
     FILE* ast_file = fopen("ast_output.txt", "w");
     print_ast(ast_file, my_parser->root, 0);
 
-    //free the parser, its job is done
+    //get a reference to the root node
+    ASTNode* ast_tree_root = my_parser->root;
+
+    //parser can be freed now, it has created the tree 
     free_parser(my_parser);
+
+    //generate the assembly code
+    FILE* assembly_file = fopen("generated_code.s", "w");
+    generate_assembly_code(assembly_file, ast_tree_root);
     
     //success
     return 0;
