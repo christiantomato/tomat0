@@ -16,8 +16,8 @@ ASTSpecialization: a union containing structs for specialized ast nodes
 #include "array_list.h"
 #include <stdio.h>
 
-#ifndef AST_NODE
-#define AST_NODE
+#ifndef AST_NODE_H
+#define AST_NODE_H
 
 typedef enum ast_node_type {
     AST_PROGRAM,

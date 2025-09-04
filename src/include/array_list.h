@@ -11,8 +11,8 @@ void** array: the pointer to the array, which is an array that holds pointers to
 
 #include <stdbool.h>
 
-#ifndef ARR_LIST
-#define ARR_LIST
+#ifndef ARR_LIST_H
+#define ARR_LIST_H
 
 typedef struct generic_array_list_struct {
     unsigned int num_items;

@@ -11,5 +11,6 @@ Header Master File
 #include "file_reader.h"
 #include "ast_node.h"
 #include "parser.h"
+#include "code_generator.h"
 
 #endif

@@ -417,7 +417,11 @@ ASTNode* parse_factor(Parser* parser) {
 }
 
 /*
-frees all dynamically allocated memory by the parser
+Free Parser Function
+
+frees dynamically allocated memory by the parser
+this includes the tokens from lexing and the parser itself,
+but not the root node as we need it for code generation and accessing the built tree
 
 Parser* parser: the parser being freed
 
@@ -429,8 +433,9 @@ int free_parser(Parser* parser) {
     if(parser == NULL) {
         return 1;
     }
-    //free any dynamically allocated memory
-    free_node(parser->root);
+    //free the desired memory that we don't need anymore
+
+    //free all tokens
     free_complex_list(parser->tokens, free_token_wrapper);
     //free parser itself
     free(parser);
