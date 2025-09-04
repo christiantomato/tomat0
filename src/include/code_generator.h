@@ -11,6 +11,8 @@ it will use a recursive algorithm to traverse through the deepest nodes first
 #ifndef CODE_GENERATOR_H
 #define CODE_GENERATOR_H
 
+//recursively writes the assembly based on node type
+int node_to_asm(FILE* FILE, ASTNode* node);
 //writes the assembly code
 int generate_assembly_code(FILE* file, ASTNode* root);
 

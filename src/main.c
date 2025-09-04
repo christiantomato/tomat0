@@ -49,6 +49,11 @@ int main (int argc, char *argv[]) {
     //generate the assembly code
     FILE* assembly_file = fopen("generated_code.s", "w");
     generate_assembly_code(assembly_file, ast_tree_root);
+
+    //make an executable
+    //system("clang generated_code.s -o executable");
+    //execute
+    //system("./executable");
     
     //success
     return 0;
