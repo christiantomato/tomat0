@@ -52,7 +52,7 @@ int generate_assembly_code(FILE* file, ASTNode* root) {
     //setup
     fprintf(file, ".text\n");
     fprintf(file, ".global _main\n");
-    fprintf(file, ".align 2\n\n");
+    fprintf(file, ".balign 4\n\n");
     fprintf(file, "_main:\n");
 
     //recursive algorithm
@@ -60,8 +60,7 @@ int generate_assembly_code(FILE* file, ASTNode* root) {
 
 
     //exit
-    fprintf(file, "\tmov w0, #0\n");
-    fprintf(file, "\tret\n");
+   
 
 
 

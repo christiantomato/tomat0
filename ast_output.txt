@@ -1,5 +1,0 @@
-NODE: AST_PROGRAM
-	NODE: AST_PRINT_STATEMENT
-	output = 
-		NODE: AST_INTEGER
-		value = 10
