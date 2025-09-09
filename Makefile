@@ -29,5 +29,5 @@ clean:
 	-rm *.o 
 	-rm src/*.o
 	-rm -rf *.dSYM
-	-rm ast_output.txt
+	-rm output/*
 	-rm generated_code.s

@@ -1,4 +1,4 @@
-> test code for the tomat0 programming language
+> test code for the AST
 
 > create an integer variable - notice no delimeters needed in tomat0
 int x = 0

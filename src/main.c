@@ -5,7 +5,7 @@
 int main (int argc, char *argv[]) {
 
     //get file contents with file reader
-    char* file_contents = read_file("assemblygoal.tmt");
+    char* file_contents = read_file("main.tmt");
     
     //display what is in main.tmt
     printf("%s\n\n", file_contents);
@@ -37,7 +37,7 @@ int main (int argc, char *argv[]) {
     parser_parse(my_parser);
 
     //write from root now
-    FILE* ast_file = fopen("ast_output.txt", "w");
+    FILE* ast_file = fopen("output/ast_output.txt", "w");
     print_ast(ast_file, my_parser->root, 0);
 
     //get a reference to the root node
@@ -47,13 +47,17 @@ int main (int argc, char *argv[]) {
     free_parser(my_parser);
 
     //generate the assembly code
-    FILE* assembly_file = fopen("generated_code.s", "w");
+    FILE* assembly_file = fopen("output/generated_code.s", "w");
     generate_assembly_code(assembly_file, ast_tree_root);
+    //close the file
+    fclose(assembly_file);
 
     //make an executable
-    //system("clang generated_code.s -o executable");
+    system("clang output/generated_code.s -o compiledtomat0");
+    //move compiled tomat0 file to output directory
+    system("mv compiledtomat0 output");
     //execute
-    //system("./executable");
+    system("./output/compiledtomat0");
     
     //success
     return 0;
