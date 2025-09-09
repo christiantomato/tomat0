@@ -17,5 +17,5 @@ Compiler for my own language, tomat0. tomat0 focuses on increasing readibility a
 
 ### TODO
 - [ ] Translating to ARM64 Assembly
-  - [ ] print integers
+  - [x] print integers
 
