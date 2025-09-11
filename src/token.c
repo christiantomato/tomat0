@@ -53,6 +53,7 @@ char* token_type_as_str(Token* token) {
         case TOKEN_PLUS: return "TOKEN_PLUS"; break;
         case TOKEN_HYPHEN: return "TOKEN_HYPHEN"; break;
         case TOKEN_ASTERIK: return "TOKEN_ASTERIK"; break;
+        case TOKEN_QUESTION: return "TOKEN_QUESTION"; break;
         case TOKEN_EOF: return "TOKEN_EOF"; break;
         default: return "TOKEN_UNKNOWN"; break;
     }
