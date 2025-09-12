@@ -39,6 +39,7 @@ int main (int argc, char *argv[]) {
     //write from root now
     FILE* ast_file = fopen("output/ast_output.txt", "w");
     print_ast(ast_file, my_parser->root, 0);
+    fclose(ast_file);
 
     //get a reference to the root node
     ASTNode* ast_tree_root = my_parser->root;
@@ -52,12 +53,15 @@ int main (int argc, char *argv[]) {
     //close the file
     fclose(assembly_file);
 
+    /*
     //make an executable
     system("clang output/generated_code.s -o compiledtomat0");
     //move compiled tomat0 file to output directory
     system("mv compiledtomat0 output");
     //execute
     system("./output/compiledtomat0");
+    */
+    
     
     //success
     return 0;
