@@ -14,6 +14,7 @@ unsigned int index: variable to help traverse through the tokens list during par
 
 #include "token.h"
 #include "ast_node.h"
+#include "symbol_table.h"
 
 #ifndef PARSER_H
 #define PARSER_H
@@ -33,8 +34,8 @@ void parser_advance(Parser* parser);
 Token* parser_peek(Parser* parser, int ahead);
 //skips unecessary grammar
 void parser_skip(Parser* parser);
-//main parsing function
-void parser_parse(Parser* parser);
+//main parsing function which also builds the symbol table
+void parser_parse(Parser* parser, SymbolTable* table);
 
 /*
 parsing functions (top down parsing)

@@ -30,11 +30,12 @@ int main (int argc, char *argv[]) {
     Token* end_of_file_token = init_token(TOKEN_EOF, NULL);
     list_add(tokens_list, end_of_file_token);
 
-    //bring out the parser
+    //bring out the parser and symbol table
     Parser* my_parser = init_parser(tokens_list);
+    SymbolTable* table = init_table();
 
     //parse everything
-    parser_parse(my_parser);
+    parser_parse(my_parser, table);
 
     //write from root now
     FILE* ast_file = fopen("output/ast_output.txt", "w");
@@ -49,18 +50,18 @@ int main (int argc, char *argv[]) {
 
     //generate the assembly code
     FILE* assembly_file = fopen("output/generated_code.s", "w");
-    generate_assembly_code(assembly_file, ast_tree_root);
+    generate_assembly_code(assembly_file, ast_tree_root, table);
     //close the file
     fclose(assembly_file);
 
-    /*
+    
     //make an executable
     system("clang output/generated_code.s -o compiledtomat0");
     //move compiled tomat0 file to output directory
     system("mv compiledtomat0 output");
     //execute
     system("./output/compiledtomat0");
-    */
+    
     
     
     //success

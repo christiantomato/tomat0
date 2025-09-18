@@ -9,16 +9,20 @@ creates a symbol table with a given initial capacity
 
 */
 
-
 SymbolTable* init_table() {
     //allocate memory for the symbol table 
     SymbolTable* table = malloc(sizeof(SymbolTable));
     //set up symbols array with some initial capacity
     table->symbols = init_list(10);
-    //set the initial offset to fp-8
+    //start at 0, allocate 8 bytes for each variable once added
     table->current_offset = 0;
     return table;
 }
+
+/*
+Add To Table Function
+
+*/
 
 void add_to_table(SymbolTable* table, const char* name, const char* type) {
     //create the symbol and add it to the list
@@ -30,8 +34,13 @@ void add_to_table(SymbolTable* table, const char* name, const char* type) {
     //update current offset for table
     table->current_offset = new_symbol->memory_offset;
     //add to the list
-    list_add(table, new_symbol);
+    list_add(table->symbols, new_symbol);
 }
+
+/*
+Look Up Symbol Function
+
+*/
 
 Symbol* look_up_symbol(SymbolTable* table, const char* name) {
     //do a linear search
