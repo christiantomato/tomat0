@@ -1,5 +1,5 @@
-> coding in tomat0
+int x = 1
+int y = 2
+int z = 3
 
-> variable test (scary)
-int x = 3
-sout(x)
+sout(x * y - (2*z) + x - (x*x*x))
