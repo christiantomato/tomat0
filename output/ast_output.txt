@@ -1,47 +1,12 @@
 NODE: AST_PROGRAM
+	NODE: AST_VARIABLE_DECLARATION
+	data_type = int
+	variable_name = x
+	assignment = 
+		NODE: AST_INTEGER
+		value = 666
 	NODE: AST_PRINT_STATEMENT
 	output = 
-		NODE: AST_BINARY_OPERATION
-		left = 
-			NODE: AST_BINARY_OPERATION
-			left = 
-				NODE: AST_INTEGER
-				value = 1
-			right = 
-				NODE: AST_BINARY_OPERATION
-				left = 
-					NODE: AST_INTEGER
-					value = 69
-				right = 
-					NODE: AST_BINARY_OPERATION
-					left = 
-						NODE: AST_INTEGER
-						value = 420
-					right = 
-						NODE: AST_BINARY_OPERATION
-						left = 
-							NODE: AST_INTEGER
-							value = 21
-						right = 
-							NODE: AST_INTEGER
-							value = 19
-						operand = *
-					operand = -
-				operand = *
-			operand = +
-		right = 
-			NODE: AST_BINARY_OPERATION
-			left = 
-				NODE: AST_BINARY_OPERATION
-				left = 
-					NODE: AST_INTEGER
-					value = 1000
-				right = 
-					NODE: AST_INTEGER
-					value = 250
-				operand = /
-			right = 
-				NODE: AST_INTEGER
-				value = 284
-			operand = +
-		operand = +
+		NODE: AST_VARIABLE
+		variable_name = x
+		value = UNRESOLVED

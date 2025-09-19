@@ -39,7 +39,7 @@ int main (int argc, char *argv[]) {
      //get a reference to the root node
     ASTNode* ast_tree_root = my_parser->root;
     //free parser since tree is created
-    free_parser(my_parser);
+    //free_parser(my_parser);
 
     //write ast representation from root now
     FILE* ast_file = fopen("output/ast_output.txt", "w");
@@ -53,9 +53,9 @@ int main (int argc, char *argv[]) {
     fclose(assembly_file);
 
     //free the root node
-    free_node(ast_tree_root);
+    //free_node(ast_tree_root);
     //free the table
-    free_symbol_table(my_table);
+    //free_symbol_table(my_table);
     
     //make an executable
     system("gcc output/generated_asm.s -o tomat0executable");
