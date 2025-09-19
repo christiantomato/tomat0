@@ -1,7 +1,7 @@
 /*
 Code Generator
 
-the code generator will use the abstract syntax tree to create code in assembly
+the code generator will use the abstract syntax tree to generate the respective code in assembly
 it will use a recursive algorithm to traverse through the deepest nodes first
 */
 
@@ -15,7 +15,7 @@ it will use a recursive algorithm to traverse through the deepest nodes first
 
 //recursively writes the assembly based on node type
 int node_to_asm(FILE* FILE, ASTNode* node, SymbolTable* table, RegisterManager* manager);
-//writes the assembly code
+//main function to write the assembly to a file
 void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table);
 
 #endif

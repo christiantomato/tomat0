@@ -3,8 +3,16 @@
 #include <stdio.h>
 
 /*
-Generate Assembly Code Function
+Node To Assembly Function
 
+writes the appropriate assembly based on the node type
+
+FILE* file: the file we are writing the asm to
+ASTNode* node: the current node we are translating
+SymbolTable* table: the symbol table containing all our symbols
+RegisterManager* manager: the manager keeping the registers in check
+
+return: can return information about last used register
 */
 
 int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* manager) {
@@ -100,6 +108,16 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
 
     return 0;
 }
+
+/*
+Generate Assembly Function
+
+generates all the assembly and writes it to a file
+
+FILE* file: the file we are writing to
+ASTNode* root: the root of the AST (the program node)
+SymbolTable* table: the symbol table with all important symbol information
+*/
 
 void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table) {
     //setup
