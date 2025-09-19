@@ -1,7 +1,5 @@
 # tomat0 Compiler
-Compiler for my own language, tomat0. 
-tomat0 focuses on increasing readibility and removing unecessary syntax. Currently, the compiler can print out integers and arithmetic expressions using the sout command. 
-ex. sout(4 + 2 * 3)
+Compiler for my own language, tomat0. tomat0 focuses on increasing readibility and removing unecessary syntax. Currently, the compiler can print out integers and arithmetic expressions using the sout command. ex. sout(4 + 2 * 3)
 
 ### Road Map
 - [x] Lexical Analysis
