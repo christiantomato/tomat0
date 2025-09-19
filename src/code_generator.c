@@ -152,4 +152,7 @@ void generate_assembly_code(FILE* file, ASTNode* root, SymbolTable* table) {
     fprintf(file, "\t.asciz \"%%d\\n\"\n\n");
     fprintf(file, "stringformatstr:\n");
     fprintf(file, "\t.asciz \"%%s\\n\"");
+
+    //free the register manager once done
+    free(manager);
 }
