@@ -441,7 +441,6 @@ int free_parser(Parser* parser) {
         return 1;
     }
     //free the desired memory that we don't need anymore
-
     //free all tokens
     free_complex_list(parser->tokens, free_token_wrapper);
     //free parser itself

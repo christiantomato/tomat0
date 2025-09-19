@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
         list_add(tokens_list, token);
     }
 
-    //free the lexer, it has done its job
+    //free the lexer as we are done tokenization
     free_lexer(my_lexer);
     printf("\n");
 
