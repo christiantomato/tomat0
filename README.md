@@ -1,22 +1,30 @@
 # tomat0 Compiler
-Compiler for my own language, tomat0. tomat0 focuses on increasing readibility and removing unecessary syntax. Currently, the compiler can print out integers and arithmetic expressions using the sout command. ex. sout(4 + 2 * 3)
+Compiler for my own language, tomat0. tomat0 focuses on increasing readibility and removing unecessary syntax. At its current state, it can compile print statements for integers and arithmetic expressions (see example in main.tmt). 
 
 ### Road Map
-- [x] Lexical Analysis
-  - [x] tokenizing integers
-  - [x] tokenizing identifiers
-  - [x] tokenizing strings
-  - [x] tokenizing symbols
+Lexical Analysis
+  - [x] tokenize punctuation characaters
+  - [x] tokenize integers
+  - [x] tokenize identifiers
+  - [x] tokenize strings
       
-- [x] Syntactic Analysis
-  - [x] AST representation
-  - [x] parsing variable declarations
-  - [x] parsing print statements
-  - [x] parsing expressions, terms, and factors
-  - [ ] parsing functions
+Syntactic Analysis
+  - [x] abstract syntax tree representation
+  - [x] store symbols in symbol table
+  - [x] parse variable declarations
+  - [x] parse print statements
+  - [x] parse expressions, terms, and factors
+  - [ ] parse functions
+
+ARM64 Assembly Generation
+  - [x] compute values of binary operations
+  - [x] print integer values to terminal
+  - [ ] print string literals to terminal
+  - [ ] use and load variable values
+  - [ ] loops
+  - [ ] functions
+  - [ ] if statements
 
 ### TODO
-- [ ] Create Symbol Table to store variables
-- [ ] Translating to ARM64 Assembly
-  - [x] print integers
+- use symbol table to store variables in memory in arm assembly code generation phase
 
