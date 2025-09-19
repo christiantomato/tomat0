@@ -1,6 +1,6 @@
 > computing formulas using tomat0 coding language
 
-> compute the profit of a company
+> program to compute the profit of a company (made 09/19/2025)
 
 > input data 
 int unitsSold = 100
