@@ -22,7 +22,7 @@ int main (int argc, char *argv[]) {
         list_add(tokens_list, token);
     }
 
-    //free the lexer as we are done tokenization
+    //free the lexer, it has done its job
     free_lexer(my_lexer);
     printf("\n");
 
@@ -32,36 +32,37 @@ int main (int argc, char *argv[]) {
 
     //bring out the parser and symbol table
     Parser* my_parser = init_parser(tokens_list);
-    SymbolTable* table = init_table();
+    SymbolTable* my_table = init_table();
 
     //parse everything
-    parser_parse(my_parser, table);
-
-    //write from root now
-    FILE* ast_file = fopen("output/ast_output.txt", "w");
-    print_ast(ast_file, my_parser->root, 0);
-    fclose(ast_file);
-
-    //get a reference to the root node
+    parser_parse(my_parser, my_table);
+     //get a reference to the root node
     ASTNode* ast_tree_root = my_parser->root;
-
-    //parser can be freed now, it has created the tree 
+    //free parser since tree is created
     free_parser(my_parser);
+
+    //write ast representation from root now
+    FILE* ast_file = fopen("output/ast_output.txt", "w");
+    print_ast(ast_file, ast_tree_root, 0);
+    fclose(ast_file);
 
     //generate the assembly code
     FILE* assembly_file = fopen("output/generated_code.s", "w");
-    generate_assembly_code(assembly_file, ast_tree_root, table);
+    generate_assembly_code(assembly_file, ast_tree_root, my_table);
     //close the file
     fclose(assembly_file);
 
+    //free the root node
+    free_node(ast_tree_root);
+    //free the table
+    free_symbol_table(my_table);
     
     //make an executable
-    system("clang output/generated_code.s -o tomat0executable");
+    system("gcc output/generated_code.s -o tomat0executable");
     //move compiled tomat0 file to output directory
     system("mv tomat0executable output");
     //execute
     system("./output/tomat0executable");
-    
     
     //success
     return 0;
