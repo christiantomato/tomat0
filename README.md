@@ -26,5 +26,6 @@ ARM64 Assembly Generation
   - [ ] if statements
 
 ### TODO
+- overlooked reassignment of variables
 - debugging free functions and need to add new parsing functions
 
