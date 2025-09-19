@@ -26,5 +26,5 @@ ARM64 Assembly Generation
   - [ ] if statements
 
 ### TODO
-- use symbol table to store variables in memory in arm assembly code generation phase
+- use symbol table to store variables in memory during arm assembly code generation phase
 
