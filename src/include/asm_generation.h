@@ -10,12 +10,12 @@ it will use a recursive algorithm to traverse through the deepest nodes first
 #include "register_manager.h"
 #include <stdio.h>
 
-#ifndef CODE_GENERATOR_H
-#define CODE_GENERATOR_H
+#ifndef ASM_GENERATION_H
+#define ASM_GENERATION_H
 
 //recursively writes the assembly based on node type
 int node_to_asm(FILE* FILE, ASTNode* node, SymbolTable* table, RegisterManager* manager);
 //writes the assembly code
-void generate_assembly_code(FILE* file, ASTNode* root, SymbolTable* table);
+void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table);
 
 #endif

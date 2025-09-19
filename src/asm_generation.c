@@ -1,4 +1,4 @@
-#include "include/code_generator.h"
+#include "include/asm_generation.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -101,7 +101,7 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
     return 0;
 }
 
-void generate_assembly_code(FILE* file, ASTNode* root, SymbolTable* table) {
+void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table) {
     //setup
 
     fprintf(file, "//setup\n");

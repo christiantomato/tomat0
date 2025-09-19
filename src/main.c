@@ -48,7 +48,7 @@ int main (int argc, char *argv[]) {
 
     //generate the assembly code
     FILE* assembly_file = fopen("output/generated_code.s", "w");
-    generate_assembly_code(assembly_file, ast_tree_root, my_table);
+    generate_assembly(assembly_file, ast_tree_root, my_table);
     //close the file
     fclose(assembly_file);
 
