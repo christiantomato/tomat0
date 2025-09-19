@@ -1,7 +1,7 @@
 /*
 File Reader
 
-used for cleanly returning the contents of a file
+used for cleanly returning the contents of a file as a string
 */
 
 #ifndef FILE_READER_H
