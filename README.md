@@ -20,7 +20,7 @@ ARM64 Assembly Generation
   - [x] compute values of binary operations
   - [x] print integer values to terminal
   - [ ] print string literals to terminal
-  - [x] use and load variable values
+  - [x] store, load, and use variables
   - [ ] loops
   - [ ] functions
   - [ ] if statements
