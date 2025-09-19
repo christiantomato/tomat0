@@ -16,6 +16,7 @@ Compiler for my own language, tomat0. tomat0 focuses on increasing readibility a
   - [ ] parsing functions
 
 ### TODO
+- [ ] Create Symbol Table to store variables
 - [ ] Translating to ARM64 Assembly
   - [x] print integers
 

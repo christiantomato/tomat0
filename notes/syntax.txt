@@ -1,0 +1,31 @@
+TOMAT0 Syntax
+
+
+
+1. No Delimeters
+
+No multiplie line statements are allowed, therefore no delimeters have to be used
+
+Example:
+
+int x = 5
+string y = "hello"
+sout(x)
+sout(y)
+
+2. Keyword: sout
+
+Used for printing to the terminal.
+Example:
+
+sout(myVariable)
+
+3. Right Chevron Comments
+
+Example:
+
+> this is a comment
+> print out the value 
+sout(value)
+
+
