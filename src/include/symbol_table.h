@@ -5,7 +5,7 @@ responsible for keeping track of symbols like variables and function names
 this way we can determine the values of these identifiers by looking them up
 
 List* symbols: the array list that holds each symbol
-int current_offset: stores the integer representing the last place a symbol was stored in memory
+int current_offset: stores the integer representing the byte location of the last place a symbol was stored in memory
 */
 
 #include "array_list.h"
@@ -13,16 +13,15 @@ int current_offset: stores the integer representing the last place a symbol was 
 #ifndef SYMBOL_TABLE_H
 #define SYMBOL_TABLE_H
 
-//define a symbol which will be used in our symbol table (name and type should be immutable)
+//symbol definition
 typedef struct symbol_struct {
-    const char* name;
+    char* name;
     const char* type;
     int memory_offset;
 } Symbol;
 
-//main structure
+//symbol table
 typedef struct symbol_table_struct {
-    //linear storage for now
     List* symbols;
     int current_offset;
 } SymbolTable;
@@ -30,8 +29,14 @@ typedef struct symbol_table_struct {
 //create the symbol table
 SymbolTable* init_table();
 //add a symbol to table
-void add_to_table(SymbolTable* table, const char* name, const char* type);
+void add_to_table(SymbolTable* table, char* name, const char* type);
 //find a symbol already in table
-Symbol* look_up_symbol(SymbolTable* table, const char* name);
+Symbol* look_up_symbol(SymbolTable* table, char* name);
+//free memory of a symbol
+int free_symbol(Symbol* symbol);
+//wrapper for freeing a symbol
+void free_symbol_wrapper(void* symbol);
+//free allocated table memory
+int free_symbol_table(SymbolTable* table);
 
 #endif
