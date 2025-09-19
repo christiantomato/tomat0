@@ -12,7 +12,7 @@ Header Master File
 #include "ast_node.h"
 #include "parser.h"
 #include "symbol_table.h"
-#include "register_tracker.h"
+#include "register_manager.h"
 #include "code_generator.h"
 
 #endif
