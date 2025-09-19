@@ -47,7 +47,7 @@ int main (int argc, char *argv[]) {
     fclose(ast_file);
 
     //generate the assembly code
-    FILE* assembly_file = fopen("output/generated_code.s", "w");
+    FILE* assembly_file = fopen("output/generated_asm.s", "w");
     generate_assembly(assembly_file, ast_tree_root, my_table);
     //close the file
     fclose(assembly_file);
@@ -58,7 +58,7 @@ int main (int argc, char *argv[]) {
     free_symbol_table(my_table);
     
     //make an executable
-    system("gcc output/generated_code.s -o tomat0executable");
+    system("gcc output/generated_asm.s -o tomat0executable");
     //move compiled tomat0 file to output directory
     system("mv tomat0executable output");
     //execute
