@@ -135,8 +135,8 @@ void print_ast(FILE* file, ASTNode* root, int indent) {
             print_indent(file, indent);
             fprintf(file, "variable_name = %s\n", root->specialization.variable.variable_name);
             print_indent(file, indent);
-            //values currently not determined through parsing
-            fprintf(file, "value = UNRESOLVED\n");
+            //values not determined through parsing actually so this field is unecessary
+            fprintf(file, "value = (determined at runtime)\n");
             //below statment crashses as we do not know the value yet
             //print_ast(file, root->specialization.variable.value, indent + 1);
             break;
