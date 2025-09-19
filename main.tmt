@@ -1,5 +1,5 @@
 > coding in tomat0
 
 > variable test (scary)
-int x = 666
+int x = 3
 sout(x)

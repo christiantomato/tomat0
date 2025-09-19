@@ -4,7 +4,7 @@ NODE: AST_PROGRAM
 	variable_name = x
 	assignment = 
 		NODE: AST_INTEGER
-		value = 666
+		value = 3
 	NODE: AST_PRINT_STATEMENT
 	output = 
 		NODE: AST_VARIABLE

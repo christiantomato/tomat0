@@ -33,6 +33,7 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
             int result_reg = node_to_asm(file, node->specialization.variable_declaration.assignment, table, manager);
 
             //store variable to stack now
+            fprintf(file, "\t//store value to stack\n");
             fprintf(file, "\tstr x%d, [x29, #%d]\n", result_reg, variable->memory_offset);
             //free the register as we are done with the storage
             free_register(manager, result_reg);
@@ -59,7 +60,9 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
             fprintf(file, "\tadr x0, integerformatstr\n");
             //move the value in the result register to register x1
             fprintf(file, "\tmov x1, x%d\n", result_reg);
+            //extra stack store is required (doesnt seem to work without lol)
             fprintf(file, "\tstr x1, [sp]\n");
+            //call to printf
             fprintf(file, "\tbl _printf\n");
             //free used register
             free_register(manager, result_reg);
@@ -101,15 +104,14 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
             break;
 
         case AST_VARIABLE: {
-
-        
             //look up the variable and load it to a register so it can be used
             Symbol* variable = look_up_symbol(table, node->specialization.variable.variable_name);
             //allocate space for a register that will hold the value of the variable
             int variable_reg = allocate_register(manager);
             
             //load the value into the register
-            fprintf(file, "ldr x%d, [x29, #%d]\n", variable_reg, variable->memory_offset);
+            fprintf(file, "\t//load value from stack\n");
+            fprintf(file, "\tldr x%d, [x29, #%d]\n", variable_reg, variable->memory_offset);
             //return the register number that the variable is in
             return variable_reg;
             break;
@@ -180,9 +182,13 @@ void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table) {
     //exit from main
     fprintf(file, "\n");
     fprintf(file, "\t//exit and clean up\n");
+    //move the exit number 0 into x0
     fprintf(file, "\tmov x0, #0\n");
-    fprintf(file, "\tldp x29, x30, [sp, #16]\n");
+    //restore x29 and x30 at the correct location
+    fprintf(file, "\tldp x29, x30, [sp, #%d]\n", var_space);
+    //add back the allocated stack space
     fprintf(file, "\tadd sp, sp, #%d\n", stack_size);
+    //return from main
     fprintf(file, "\tret\n");
 
     //format strings for print statements
