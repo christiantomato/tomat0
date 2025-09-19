@@ -21,12 +21,24 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
         case AST_PROGRAM:
             //go through children nodes
             for(int i = 0; i < node->children->num_items; i++) {
+                //generate the asm for all nodes in the program
                 node_to_asm(file, node->children->array[i], table, manager);
             }
             break;
-        case AST_VARIABLE_DECLARATION:
-            //
+
+        case AST_VARIABLE_DECLARATION: {
+            //variable already added to table during parsing, look it up in table and return the Symbol structure
+            Symbol* variable = look_up_symbol(table, node->specialization.variable_declaration.variable_name);
+            //firstly determine what the actual value of the variable is going to be and get the register of the result
+            int result_reg = node_to_asm(file, node->specialization.variable_declaration.assignment, table, manager);
+
+            //store variable to stack now
+            fprintf(file, "\t//store value to stack\n");
+            fprintf(file, "\tstr x%d, [x29, #%d]\n", result_reg, variable->memory_offset);
+            //free the register as we are done with the storage
+            free_register(manager, result_reg);
             break;
+        }
         case AST_PRINT_STATEMENT: {
             //evaluate the statement inside the print statement
             int result_reg = node_to_asm(file, node->specialization.print_statement.statement, table, manager);
@@ -48,13 +60,14 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
             fprintf(file, "\tadr x0, integerformatstr\n");
             //move the value in the result register to register x1
             fprintf(file, "\tmov x1, x%d\n", result_reg);
+            //extra stack store is required (doesnt seem to work without lol)
             fprintf(file, "\tstr x1, [sp]\n");
+            //call to printf
             fprintf(file, "\tbl _printf\n");
             //free used register
             free_register(manager, result_reg);
             break;
         }
-            
         case AST_BINARY_OPERATION: {
             //get the registers with the left and right statements
             int left_reg = node_to_asm(file, node->specialization.binary_operation.left, table, manager);
@@ -89,9 +102,20 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* 
         case AST_NEGATION:
           
             break;
-        case AST_VARIABLE:
-           
+
+        case AST_VARIABLE: {
+            //look up the variable and load it to a register so it can be used
+            Symbol* variable = look_up_symbol(table, node->specialization.variable.variable_name);
+            //allocate space for a register that will hold the value of the variable
+            int variable_reg = allocate_register(manager);
+            
+            //load the value into the register
+            fprintf(file, "\t//load value from stack\n");
+            fprintf(file, "\tldr x%d, [x29, #%d]\n", variable_reg, variable->memory_offset);
+            //return the register number that the variable is in
+            return variable_reg;
             break;
+        }
         case AST_INTEGER: {
             //move value to a free register
             int reg = allocate_register(manager);
@@ -158,9 +182,13 @@ void generate_assembly(FILE* file, ASTNode* root, SymbolTable* table) {
     //exit from main
     fprintf(file, "\n");
     fprintf(file, "\t//exit and clean up\n");
+    //move the exit number 0 into x0
     fprintf(file, "\tmov x0, #0\n");
-    fprintf(file, "\tldp x29, x30, [sp, #16]\n");
+    //restore x29 and x30 at the correct location
+    fprintf(file, "\tldp x29, x30, [sp, #%d]\n", var_space);
+    //add back the allocated stack space
     fprintf(file, "\tadd sp, sp, #%d\n", stack_size);
+    //return from main
     fprintf(file, "\tret\n");
 
     //format strings for print statements
