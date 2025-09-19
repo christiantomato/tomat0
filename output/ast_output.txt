@@ -6,24 +6,42 @@ NODE: AST_PROGRAM
 			NODE: AST_BINARY_OPERATION
 			left = 
 				NODE: AST_INTEGER
-				value = 4
+				value = 1
 			right = 
 				NODE: AST_BINARY_OPERATION
 				left = 
 					NODE: AST_INTEGER
-					value = 6
+					value = 69
 				right = 
-					NODE: AST_INTEGER
-					value = 2
+					NODE: AST_BINARY_OPERATION
+					left = 
+						NODE: AST_INTEGER
+						value = 420
+					right = 
+						NODE: AST_BINARY_OPERATION
+						left = 
+							NODE: AST_INTEGER
+							value = 21
+						right = 
+							NODE: AST_INTEGER
+							value = 19
+						operand = *
+					operand = -
 				operand = *
 			operand = +
 		right = 
 			NODE: AST_BINARY_OPERATION
 			left = 
-				NODE: AST_INTEGER
-				value = 8
+				NODE: AST_BINARY_OPERATION
+				left = 
+					NODE: AST_INTEGER
+					value = 1000
+				right = 
+					NODE: AST_INTEGER
+					value = 250
+				operand = /
 			right = 
 				NODE: AST_INTEGER
-				value = 3
-			operand = -
+				value = 284
+			operand = +
 		operand = +

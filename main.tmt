@@ -1,4 +1,4 @@
 > coding in tomat0
 
-> print out a complicated expression!
-sout(4 + 6 * 2 + (8-3))
+> print out a complicated arithmetic expression (answer is 1738)
+sout(1 + 69 * (420 - (21 * 19)) + (1000/250 + 284))
