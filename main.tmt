@@ -1,4 +1,4 @@
 > coding in tomat0
 
-sout(10000)
-
+> print out a complicated expression!
+sout(4 + 6 * 2 + (8-3))

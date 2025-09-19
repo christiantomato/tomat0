@@ -39,6 +39,6 @@ int allocate_safe_register(RegisterTracker* tracker, int old_register) {
 }
 
 void free_register(RegisterTracker* tracker, int register_num) {
-    tracker->registers[register_num] = false;
+    tracker->registers[register_num] = true;
 }
 

@@ -1,0 +1,29 @@
+NODE: AST_PROGRAM
+	NODE: AST_PRINT_STATEMENT
+	output = 
+		NODE: AST_BINARY_OPERATION
+		left = 
+			NODE: AST_BINARY_OPERATION
+			left = 
+				NODE: AST_INTEGER
+				value = 4
+			right = 
+				NODE: AST_BINARY_OPERATION
+				left = 
+					NODE: AST_INTEGER
+					value = 6
+				right = 
+					NODE: AST_INTEGER
+					value = 2
+				operand = *
+			operand = +
+		right = 
+			NODE: AST_BINARY_OPERATION
+			left = 
+				NODE: AST_INTEGER
+				value = 8
+			right = 
+				NODE: AST_INTEGER
+				value = 3
+			operand = -
+		operand = +

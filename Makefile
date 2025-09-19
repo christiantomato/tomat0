@@ -6,7 +6,7 @@ sources = $(wildcard src/*.c)
 objects = $(sources: .c = .o)
 
 #for debugging, using asan for memory problems
-flags = -g -fsanitize=address
+flags = -fsanitize=address
 
 #instructions on how to create the exectuable
 $(exec): $(objects)

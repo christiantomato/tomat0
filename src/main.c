@@ -56,12 +56,11 @@ int main (int argc, char *argv[]) {
 
     
     //make an executable
-    system("clang output/generated_code.s -o compiledtomat0");
+    system("clang output/generated_code.s -o tomat0executable");
     //move compiled tomat0 file to output directory
-    system("mv compiledtomat0 output");
+    system("mv tomat0executable output");
     //execute
-    system("./output/compiledtomat0");
-    
+    system("./output/tomat0executable");
     
     
     //success

@@ -8,5 +8,3 @@ string y = "hello world"
 
 > a print statement of a complicated expression
 sout(3 * (4-2) + (-1))
-
-> next step is converting to assembly (pain)
