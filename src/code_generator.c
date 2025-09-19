@@ -7,13 +7,13 @@ Generate Assembly Code Function
 
 */
 
-int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* tracker) {
+int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterManager* manager) {
     //switch on the node type
     switch(node->type) {
         case AST_PROGRAM:
             //go through children nodes
             for(int i = 0; i < node->children->num_items; i++) {
-                node_to_asm(file, node->children->array[i], table, tracker);
+                node_to_asm(file, node->children->array[i], table, manager);
             }
             break;
         case AST_VARIABLE_DECLARATION:
@@ -21,7 +21,7 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* 
             break;
         case AST_PRINT_STATEMENT: {
             //evaluate the statement inside the print statement
-            int result_reg = node_to_asm(file, node->specialization.print_statement.statement, table, tracker);
+            int result_reg = node_to_asm(file, node->specialization.print_statement.statement, table, manager);
 
             // **just work with integers right now, print strings later**
             fprintf(file, "\t//print\n");
@@ -29,7 +29,7 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* 
             //make sure the result reg isn't 0 or 1 because we need to use them for arguments
             if(result_reg == 0 || result_reg == 1) {
                 //create a safe register and update the old register to be free
-                int safe_reg = allocate_safe_register(tracker, result_reg);
+                int safe_reg = allocate_safe_register(manager, result_reg);
                 //move the value into the safe register
                 fprintf(file, "\tmov x%d, x%d\n", safe_reg, result_reg);
                 //update the value of the result register to safe register value
@@ -43,16 +43,16 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* 
             fprintf(file, "\tstr x1, [sp]\n");
             fprintf(file, "\tbl _printf\n");
             //free used register
-            free_register(tracker, result_reg);
+            free_register(manager, result_reg);
             break;
         }
             
         case AST_BINARY_OPERATION: {
             //get the registers with the left and right statements
-            int left_reg = node_to_asm(file, node->specialization.binary_operation.left, table, tracker);
-            int right_reg = node_to_asm(file, node->specialization.binary_operation.right, table, tracker);
+            int left_reg = node_to_asm(file, node->specialization.binary_operation.left, table, manager);
+            int right_reg = node_to_asm(file, node->specialization.binary_operation.right, table, manager);
             //allocate space for a register that will store the value
-            int result_reg = allocate_register(tracker);
+            int result_reg = allocate_register(manager);
 
             //switch on the operand (make sure to dereference)
             fprintf(file, "\t//binary operation\n");
@@ -72,8 +72,8 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* 
                     break;
             }
             //free the used left and right registers
-            free_register(tracker, left_reg);
-            free_register(tracker, right_reg);
+            free_register(manager, left_reg);
+            free_register(manager, right_reg);
             //return the register containing result
             return result_reg;
             break;
@@ -86,7 +86,7 @@ int node_to_asm(FILE* file, ASTNode* node, SymbolTable* table, RegisterTracker* 
             break;
         case AST_INTEGER: {
             //move value to a free register
-            int reg = allocate_register(tracker);
+            int reg = allocate_register(manager);
             fprintf(file, "\t//move value to register\n");
             fprintf(file, "\tmov x%d, #%d\n", reg, node->specialization.integer_literal.value);
             //return the register number
@@ -132,10 +132,10 @@ void generate_assembly_code(FILE* file, ASTNode* root, SymbolTable* table) {
     fprintf(file, "\n");
 
     //create a register tracker
-    RegisterTracker* tracker = init_register_tracker();
+    RegisterManager* manager = init_register_manager();
     //call recursive algorithm and generate assembly code
     fprintf(file, "\t//Code Gen Starts Here: \n\n");
-    node_to_asm(file, root, table, tracker);
+    node_to_asm(file, root, table, manager);
 
     //exit from main
     fprintf(file, "\n");
