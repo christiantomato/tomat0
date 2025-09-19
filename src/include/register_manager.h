@@ -15,7 +15,7 @@ typedef struct register_manager_struct {
     bool registers[16];
 } RegisterManager;
 
-//initializes the tracker
+//initializes the manager
 RegisterManager* init_register_manager();
 //returns the number of the register that was allocated
 int allocate_register(RegisterManager* manager);
